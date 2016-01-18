@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+<VBox id="vboxMain" cacheShape="false" prefHeight="423.0" prefWidth="671.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.InitController">
+  <children>
+    <MenuBar fx:id="mainMenuBar" VBox.vgrow="NEVER" />
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="365.0" prefWidth="419.0" HBox.hgrow="ALWAYS">
+               <content>
+                  <TableView fx:id="tableQueryResults" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="100.0" />
+               </content>
+            </ScrollPane>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="388.0" prefWidth="217.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label opacity="0.7" text="Run Query">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label opacity="0.7" text="Query String">
+                     <VBox.margin>
+                        <Insets bottom="3.0" top="3.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextArea fx:id="textAreaQuery" maxWidth="1.7976931348623157E308" prefHeight="93.0" prefWidth="206.0" promptText="Enter a MySQL query here." VBox.vgrow="NEVER">
+                     <VBox.margin>
+                        <Insets right="5.0" />
+                     </VBox.margin></TextArea>
+                  <Button fx:id="btnExecuteQuery" mnemonicParsing="false" text="Execute Query">
+                     <VBox.margin>
+                        <Insets top="3.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <Label opacity="0.7" text="Database">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label opacity="0.7" text="File URL">
+                     <VBox.margin>
+                        <Insets bottom="3.0" top="3.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="textFieldFileURL" maxWidth="-Infinity" promptText="Server Properties Location" VBox.vgrow="NEVER" />
+                  <Button fx:id="btnLocateProperties" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Locate Properties File">
+                     <VBox.margin>
+                        <Insets bottom="3.0" top="3.0" />
+                     </VBox.margin>
+                  </Button>
+                  <HBox maxHeight="-Infinity" prefHeight="32.0" prefWidth="243.0" spacing="3.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="btnConnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Connect" />
+                        <Button fx:id="btnDisconnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Disconnect" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <Label fx:id="labelConnectionStatus" opacity="0.7" text="Status: connecting..." />
+                  <ProgressBar fx:id="progressConnection" prefWidth="200.0" progress="0" />
+               </children>
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </VBox.margin>
+      </HBox>
+  </children>
+  <stylesheets>
+    <URL value="@mainWindow.css" />
+  </stylesheets>
+</VBox>
