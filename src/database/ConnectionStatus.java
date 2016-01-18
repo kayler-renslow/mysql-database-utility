@@ -3,7 +3,9 @@ package database;
 import main.Lang;
 
 /**
- * Created by kayler on 11/6/15.
+ * @author Kayler
+ * All types of connection states/statuses
+ * Created on 11/6/15.
  */
 public enum ConnectionStatus{
     DISCONNECTED(Lang.CONN_STATUS_DISCONNECTED), CONNECTING(Lang.CONN_STATUS_CONNECTING), CONNECTED(Lang.CONN_STATUS_CONNECTED), CONNECTION_ERROR(Lang.CONN_STATUS_CONN_ERROR),

@@ -4,7 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 /**
- * Created by kayler on 12/7/15.
+ * @author Kayler
+ * Event class used for when a FXMenuItem was clicked.
+ * Created on 12/7/15.
  */
 class FXMenuItemEvent implements EventHandler<ActionEvent> {
     private IFXMenuEventHandle handler;

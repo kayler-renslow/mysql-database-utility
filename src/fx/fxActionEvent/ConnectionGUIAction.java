@@ -5,10 +5,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 /**
- * Created by kayler on 11/9/15.
- *
+ * @author Kayler
  * This class is the facade layer from the GUI to the Database connection.
  * This class is used whenever the GUI connect or disconnect button is pressed.
+ * Created on 11/9/15.
  */
 public class ConnectionGUIAction implements EventHandler<ActionEvent> {
     private DatabaseFXController dc;

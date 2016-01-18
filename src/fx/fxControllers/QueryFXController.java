@@ -14,7 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by kayler on 11/4/15.
+ * @author Kayler
+ * Controller class that handles all database querying gui functionality. No database implementation execution is done here, besides calling the DatabaseConnection API.
+ * Created on 11/4/15.
  */
 public class QueryFXController {
     private static final String STYLE_ERROR = "-fx-background:red;";
@@ -36,7 +38,7 @@ public class QueryFXController {
 
     private void initialize() {
         this.btnExecute.setOnAction(qee);
-        Program.dbConnection.setQueryExecutedEvent(qee);
+        Program.DATABASE_CONNECTION.setQueryExecutedEvent(qee);
         FXUtil.setEmptyContextMenu(this.tfTextQuery);
     }
 
@@ -55,6 +57,7 @@ public class QueryFXController {
         return dbTable.tv;
     }
 
+    /**Return the DBTableView instance*/
     public DBTableView getDBTableInstance(){
         return dbTable;
     }
@@ -82,7 +85,7 @@ public class QueryFXController {
     }
 
     void addEmptyRow(){
-        if(Program.dbConnection.isConnected()){
+        if(Program.DATABASE_CONNECTION.isConnected()){
            this.dbTable.addEmptyRow();
         }else{
             this.getDBTableInstance().addTableRowError(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR, Lang.NOTIF_BODY_NOT_CONNECTED);

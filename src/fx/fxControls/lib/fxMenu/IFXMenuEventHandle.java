@@ -3,7 +3,9 @@ package fx.fxControls.lib.fxMenu;
 import javafx.event.ActionEvent;
 
 /**
- * Created by kayler on 12/11/15.
+ * @author Kayler
+ * Interface that is used as an event handler for when an FXMenuItem that was added in a menu from FXMenuUtil
+ * Created on 12/11/15.
  */
 public interface IFXMenuEventHandle {
 

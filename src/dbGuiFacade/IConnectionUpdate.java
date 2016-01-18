@@ -1,7 +1,10 @@
 package dbGuiFacade;
 
 /**
- * Created by kayler on 11/9/15.
+ * @author Kayler
+ * Tells JavaFX components that there was an update with the DatabaseConnection's connection (connected, disconnected, etc.)
+ *
+ * Created on 11/9/15.
  */
 public interface IConnectionUpdate {
 

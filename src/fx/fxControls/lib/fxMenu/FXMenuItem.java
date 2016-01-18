@@ -3,7 +3,9 @@ package fx.fxControls.lib.fxMenu;
 import javafx.scene.control.MenuItem;
 
 /**
- * Created by kayler on 12/7/15.
+ * @author Kayler
+ * Wrapper class for a normal JavaFX MenuItem. This class contains one additional method, getInsertionIndex(), which returns the index at which it was added from FXMenuUtil
+ * Created on 12/7/15
  */
 public class FXMenuItem extends MenuItem {
     private int insertionIndex;
@@ -15,6 +17,7 @@ public class FXMenuItem extends MenuItem {
         this.insertionIndex = index;
     }
 
+	/**Returns the index at which it was added in an FXMenu*/
     public int getInsertionIndex(){
         return this.insertionIndex;
     }

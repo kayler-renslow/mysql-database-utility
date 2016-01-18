@@ -1,15 +1,16 @@
 package fx.fxControls;
 
-import fx.fxControls.lib.fxMenu.FXMenu;
 import fx.fxControls.lib.fxMenu.FXMenuItem;
+import fx.fxControls.lib.fxMenu.FXMenuUtil;
 import fx.fxControls.lib.fxMenu.IFXMenuEventHandle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TableView;
-import main.Lang;/**/
+import main.Lang;
 
 /**
- * Created by kayler on 12/15/15.
+ * @author Kayler
+ * Created on 12/15/15.
  */
 public class ContextMenu_DBTableView extends javafx.scene.control.ContextMenu implements IFXMenuEventHandle {
 
@@ -17,7 +18,7 @@ public class ContextMenu_DBTableView extends javafx.scene.control.ContextMenu im
     private TableView<ObservableList> tv;
 
     public ContextMenu_DBTableView(TableView tv){
-        FXMenu.addItems(this, this, edit);
+        FXMenuUtil.addItems(this, this, edit);
         this.tv = tv;
     }
 

@@ -1,7 +1,8 @@
 package main;
 
 /**
- * Created by kayler on 11/20/15.
+ * @author Kayler
+ * Created on 11/20/15.
  */
 public class Lang {
 

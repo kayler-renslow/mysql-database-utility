@@ -9,6 +9,10 @@ import java.io.PrintStream;
 import java.sql.*;
 import java.util.Properties;
 
+/**
+ * @author Kayler
+ * Library code for running a MySQL database connection. All connection properties (username, password, etc) are located in a .properties file. This library uses JDBC.
+ * */
 public class MysqlConnection{
 	private String server;
 	private String database;

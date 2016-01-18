@@ -9,9 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by kayler on 11/9/15.
- *
+ *@author Kayler
  * This class is used when the execute query button is pressed. When the query itself is finished, it runs either querySuccess() or queryFail()
+ *
+ * Created on 11/9/15.
  */
 public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<ActionEvent> {
     private QueryFXController qc;
@@ -26,7 +27,7 @@ public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<Acti
     }
 
     private void runQuery(){
-        Program.dbConnection.prepareQuery(qc.getQueryText());
+        Program.DATABASE_CONNECTION.prepareQuery(qc.getQueryText());
         this.qc.getDatabaseController().runTask(this.qc.getDatabaseController().getQueryTask());
     }
 

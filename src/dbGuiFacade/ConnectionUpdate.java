@@ -6,9 +6,9 @@ import javafx.beans.value.ObservableValue;
 import main.Program;
 
 /**
- * Created by kayler on 11/9/15.
- *
+ * @author Kayler
  * When the Database connection updates (from connected to disconnected for example), the connectionUpdate() method is invoked.
+ * Created on 11/9/15.
  */
 public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Object> {
 
@@ -27,7 +27,7 @@ public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Objec
 
     @Override
     public void connectionUpdate() {
-        switch(Program.dbConnection.status) {
+        switch(Program.DATABASE_CONNECTION.status) {
             case CONNECTED:
                 setProgress(1.0);
                 break;
@@ -47,7 +47,7 @@ public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Objec
 
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newVal) {
-        dc.updateStatusText(Program.dbConnection.getConnectionStatus());
+        dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatus());
         dc.updateConnectionProgress(this.prog);
         dc.setProgressStyle(this.style);
     }

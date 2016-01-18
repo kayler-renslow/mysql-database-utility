@@ -1,10 +1,13 @@
 package fx.fxControls.lib.fxMenu;
 
 /**
- * Created by kayler on 12/7/15.
+ * @author Kayler
+ * Class that adds FXMenuItems to JavaFX menus and adds event handler and sets insertionIndex
+ * Created on 12/7/15.
  */
-public abstract class FXMenu {
+public final class FXMenuUtil{
 
+	/**Adds FXMenuItems to a menu. Automatically sets insertionIndex and event listener*/
     public static void addItems(javafx.scene.control.Menu menu, IFXMenuEventHandle handle, FXMenuItem... items){
         int insertionIndex = menu.getItems().size();
         for(int i = 0; i < items.length; i++){
@@ -14,6 +17,7 @@ public abstract class FXMenu {
         }
     }
 
+	/**Adds FXMenuItems to a context menu. Automatically sets insertionIndex and event listener*/
     public static void addItems(javafx.scene.control.ContextMenu menu, IFXMenuEventHandle handle, FXMenuItem... items){
         int insertionIndex = menu.getItems().size();
         for(int i = 0; i < items.length; i++){

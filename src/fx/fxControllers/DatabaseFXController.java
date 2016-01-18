@@ -11,7 +11,9 @@ import main.Program;
 import java.io.File;
 
 /**
- * Created by kayler on 11/6/15.
+ * @author Kayler
+ * JavaFX controller class for all things database. Also contains the QueryFXController instance. This is also where Database Tasks are created and used.
+ * Created on 11/6/15.
  */
 public class DatabaseFXController {
     private Button btnLocateProperties;
@@ -41,12 +43,12 @@ public class DatabaseFXController {
     }
 
     private void initialize() {
-        lbStatus.setText(Program.dbConnection.getConnectionStatus());
+        lbStatus.setText(Program.DATABASE_CONNECTION.getConnectionStatus());
         btnConnect.setOnAction(new ConnectionGUIAction(this, true));
         btnDisconnect.setOnAction(new ConnectionGUIAction(this, false));
         btnLocateProperties.setOnAction(new LocatePropFileAction(this));
 
-        Program.dbConnection.setConnectionUpdate(CONN_UPDATE);
+        Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
 
         setTasks();
     }
@@ -63,39 +65,47 @@ public class DatabaseFXController {
 
     public void setPropertiesFileLocation(File file){
         this.tfPropFileLoc.setText(file.getPath());
-        Program.dbConnection.setConnectionPropertiesFile(file);
+        Program.DATABASE_CONNECTION.setConnectionPropertiesFile(file);
     }
 
+	/**Task used for connection to the database*/
     public Task getConnectTask(){
         return this.taskConnect;
     }
 
+	/**Task used for disconnecting the database connection*/
     public Task getDisconnectTask(){
         return this.taskDisconnect;
     }
 
+	/**Task used for making database queries*/
     public Task getQueryTask(){
         return this.taskQuery;
     }
 
+	/**Run a task. The task specified should be the tasks available in this class.*/
     public void runTask(Task t) {
         Thread thread = new Thread(t);
         thread.setDaemon(true);
         thread.run();
     }
 
+	/**Update the connection status text*/
     public void updateStatusText(String text){
         this.lbStatus.setText(text);
     }
 
+	/**Update the connection progress bar*/
     public void updateConnectionProgress(double prog){
         this.pbConnection.setProgress(prog);
     }
 
+	/**Set the connection progress bar style*/
     public void setProgressStyle(String fxStyle){
         this.pbConnection.setStyle(fxStyle);
     }
 
+	/**Add a new and empty database entry*/
     public void createNewEntry() {
         this.qc.addEmptyRow();
     }

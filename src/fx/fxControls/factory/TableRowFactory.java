@@ -7,7 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 /**
- * Created by kayler on 12/9/15.
+ * @author Kayler
+ * Created on 12/9/15.
  */
 public class TableRowFactory implements Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>> {
     private final int tableColumn;

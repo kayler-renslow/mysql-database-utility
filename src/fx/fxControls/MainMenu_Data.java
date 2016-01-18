@@ -1,14 +1,15 @@
 package fx.fxControls;
 
 import fx.fxControllers.DatabaseFXController;
-import fx.fxControls.lib.fxMenu.FXMenu;
 import fx.fxControls.lib.fxMenu.FXMenuItem;
+import fx.fxControls.lib.fxMenu.FXMenuUtil;
 import fx.fxControls.lib.fxMenu.IFXMenuEventHandle;
 import javafx.event.ActionEvent;
 import main.Lang;
 
 /**
- * Created by kayler on 12/7/15.
+ * @author Kayler
+ * Created on 12/7/15.
  */
 public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuEventHandle {
 
@@ -18,7 +19,7 @@ public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuE
 
     public MainMenu_Data(DatabaseFXController dc) {
         super(Lang.MENUB_DATA_TITLE);
-        FXMenu.addItems(this, this, menuNewEntry, menuSyncData);
+        FXMenuUtil.addItems(this, this, menuNewEntry, menuSyncData);
         this.dc = dc;
     }
 

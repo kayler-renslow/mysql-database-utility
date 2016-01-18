@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.sql.ResultSet;
 
 /**
- * Created by kayler on 11/6/15.
- *
+ * @author Kayler
  * Runs a database connection and query utility synchronously.
+ * Created on 11/6/15.
  */
 public class DatabaseConnection {
     private File propFile;

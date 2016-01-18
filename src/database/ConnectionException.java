@@ -1,7 +1,8 @@
 package database;
 
 /**
- * Created by kayler on 11/3/15.
+ * @author Kayler
+ * Created on 11/3/15.
  */
 public class ConnectionException extends Exception {
 

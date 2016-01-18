@@ -2,7 +2,10 @@ package dbGuiFacade;
 
 import java.sql.ResultSet;
 /**
- * Created by kayler on 11/11/15.
+ * @author Kayler
+ * Interface used to tell JavaFX controllers that a query was executed in the DatabaseConnection.
+ *
+ * Created on 11/11/15.
  */
 public interface IQueryExecuteEvent {
     /**This method is ran when a query has been successfully executed. ResultSet rs is the result of the query.*/

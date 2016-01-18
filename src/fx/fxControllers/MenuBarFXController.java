@@ -5,7 +5,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 
 /**
- * Created by kayler on 12/7/15.
+ * @author Kayler
+ * Controller class that handles all creation and insertion of menus in the main menu bar
+ * Created on 12/7/15.
  */
 public class MenuBarFXController {
     private MenuBar mb;

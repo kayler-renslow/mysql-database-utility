@@ -6,6 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * @author Kayler
+ * Where execution of the program begins. Creates the JavaFX Stage by loading it from the .fxml*/
 public class Main extends Application {
 
     private static VBox root = null;
@@ -24,10 +27,6 @@ public class Main extends Application {
         Main.stage.setTitle(Lang.PROGRAM_WINDOW_TITLE);
         Main.stage.setScene(scene);
         Main.stage.show();
-    }
-
-    public static Stage getRootStage(){
-        return stage;
     }
 
 }

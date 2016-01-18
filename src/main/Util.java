@@ -3,7 +3,9 @@ package main;
 import java.util.StringTokenizer;
 
 /**
- * Created by kayler on 12/4/15.
+ * @author Kayler
+ * Misc utilities
+ * Created on 12/4/15.
  */
 public class Util {
 

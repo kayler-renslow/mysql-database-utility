@@ -10,7 +10,9 @@ import main.Main;
 import java.io.File;
 
 /**
- * Created by kayler on 11/20/15.
+ * @author Kayler
+ * This class is used whenever the locate connection properties button is pressed. It creates the file chooser and then updates the DatabaseFXController's connection properties file location when a file is picked.
+ * Created on 11/20/15.
  */
 public class LocatePropFileAction implements EventHandler<ActionEvent> {
     private DatabaseFXController dc;

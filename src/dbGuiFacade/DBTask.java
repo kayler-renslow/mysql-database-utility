@@ -3,7 +3,9 @@ package dbGuiFacade;
 import main.Program;
 
 /**
- * Created by kayler on 11/16/15.
+ * @author Kayler
+ * Database implementations are executed on this task. A task is JavaFX's way of placing execution off of the GUI thread and onto a new one.
+ * Created on 11/16/15.
  */
 public class DBTask extends Task{
 
@@ -29,9 +31,9 @@ public class DBTask extends Task{
     protected Object call() throws Exception {
         connUpdate.setTask(this);
         switch (taskType){
-            case CONNECT: Program.dbConnection.connect(); break;
-            case DISCONNECT: Program.dbConnection.disconnect(); break;
-            case RUN_QUERY: Program.dbConnection.runQuery(); break;
+            case CONNECT: Program.DATABASE_CONNECTION.connect(); break;
+            case DISCONNECT: Program.DATABASE_CONNECTION.disconnect(); break;
+            case RUN_QUERY: Program.DATABASE_CONNECTION.runQuery(); break;
         }
         return this.getValue();
     }

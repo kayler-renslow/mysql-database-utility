@@ -5,7 +5,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 
 /**
- * Created by kayler on 12/2/15.
+ * @author Kayler
+ * Created on 12/2/15.
  */
 public class FXUtil {
 

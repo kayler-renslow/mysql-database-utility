@@ -14,7 +14,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
- * Created by kayler on 12/9/15.
+ * @author Kayler
+ * Class that holds a TableView for showing the database's information
+ * Created on 12/9/15.
  */
 public class DBTableView {
     public final TableView<ObservableList> tv;

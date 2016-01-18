@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**Base controller class for the main window's fxml*/
 public class InitController implements Initializable{
     @FXML
     VBox vboxMain;
