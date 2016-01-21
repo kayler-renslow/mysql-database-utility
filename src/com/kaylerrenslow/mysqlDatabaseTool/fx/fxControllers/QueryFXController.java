@@ -1,11 +1,12 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers;
 
+import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBConnectionUpdate;
+import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.QueryExecutedEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.FXUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.DBTableView;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -25,14 +26,17 @@ public class QueryFXController {
     private Button btnExecute;
     private TextArea tfTextQuery;
     private DBTableView dbTable;
-    private DatabaseFXController dc;
     private QueryExecutedEvent qee = new QueryExecutedEvent(this);
 
+    private final DBConnectionUpdate CONN_UPDATE;
+
+    private DBTask taskQuery;
+
     public QueryFXController(DatabaseFXController dc, TextArea queryText, Button btnExecute, TableView queryResultTable) {
-        this.dc = dc;
         this.tfTextQuery = queryText;
         this.btnExecute = btnExecute;
         this.dbTable = new DBTableView(queryResultTable);
+        CONN_UPDATE = new DBConnectionUpdate(dc);
         initialize();
     }
 
@@ -40,21 +44,27 @@ public class QueryFXController {
         this.btnExecute.setOnAction(qee);
         Program.DATABASE_CONNECTION.setQueryExecutedEvent(qee);
         FXUtil.setEmptyContextMenu(this.tfTextQuery);
+
+        Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
+
+        setTasks();
     }
 
-    /**Get the DatabaseFXController associated with this QueryFXController*/
-    public DatabaseFXController getDatabaseController(){
-        return this.dc;
+    private void setTasks() {
+        taskQuery = new DBTask(CONN_UPDATE, DBTask.TaskType.RUN_QUERY);
+
+        taskQuery.valueProperty().addListener(CONN_UPDATE);
+        /**Task used for connection to the database*/
+    }
+
+    /**Task used for making database queries*/
+    public DBTask getQueryTask(){
+        return this.taskQuery;
     }
 
     /**Get the query text area's text*/
     public String getQueryText() {
         return tfTextQuery.getText();
-    }
-
-    /**Return the Database's TableView for displaying query results.*/
-    public TableView<ObservableList> getDBTableView() {
-        return dbTable.tv;
     }
 
     /**Return the DBTableView instance*/
@@ -68,7 +78,6 @@ public class QueryFXController {
         this.tfTextQuery.setStyle(STYLE_DEFAULT);
     }
 
-
     /**This should be invoked whenever a query failed. It shows the context menu with the error and
      * set's the query's text area border red.*/
     public void queryFailed(String errorMsg) {
@@ -76,8 +85,6 @@ public class QueryFXController {
 
         this.dbTable.addTableRowError(Lang.NOTIF_TITLE_QUERY_FAILED, errorMsg);
     }
-
-
 
     /**Handle's the query result and adds it into the TableView*/
     public void querySuccess(ResultSet rs) throws SQLException{

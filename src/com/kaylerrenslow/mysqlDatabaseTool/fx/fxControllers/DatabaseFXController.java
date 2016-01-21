@@ -5,14 +5,13 @@ import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent.ConnectionGUIAction;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent.LocatePropFileAction;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import javafx.concurrent.Task;
 import javafx.scene.control.*;
 
 import java.io.File;
 
 /**
  * @author Kayler
- * JavaFX controller class for all things database. Also contains the QueryFXController instance. This is also where Database Tasks are created and used.
+ * JavaFX controller class for all things database. This is also where Database Tasks (connecting and disconnecting) are created and used.
  * Created on 11/6/15.
  */
 public class DatabaseFXController {
@@ -24,9 +23,9 @@ public class DatabaseFXController {
     private ProgressBar pbConnection;
     private TextArea taConsole;
 
-    private final DBConnectionUpdate CONN_UPDATE = new DBConnectionUpdate(this);
+	private final DBConnectionUpdate CONN_UPDATE = new DBConnectionUpdate(this);
 
-    private DBTask taskConnect, taskDisconnect, taskQuery;
+	private DBTask taskConnect, taskDisconnect;
 
     public DatabaseFXController(TextField tfPropFileLoc, Button btnLocateProperties, Button btnConnect, Button btnDisconnect, Label lbStatus, ProgressBar pbConnection, TextArea taConsole) {
         this.tfPropFileLoc = tfPropFileLoc;
@@ -48,20 +47,27 @@ public class DatabaseFXController {
 
 		taConsole.setEditable(false);
 
-        Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
-
-        setTasks();
+		setTasks();
     }
 
-    private void setTasks(){
-        taskConnect = new DBTask(CONN_UPDATE, DBTask.TaskType.CONNECT);
-        taskDisconnect = new DBTask(CONN_UPDATE, DBTask.TaskType.DISCONNECT);
-        taskQuery = new DBTask(CONN_UPDATE, DBTask.TaskType.RUN_QUERY);
+	private void setTasks(){
+		taskConnect = new DBTask(CONN_UPDATE, DBTask.TaskType.CONNECT);
+		taskDisconnect = new DBTask(CONN_UPDATE, DBTask.TaskType.DISCONNECT);
 
-        taskConnect.valueProperty().addListener(CONN_UPDATE);
-        taskDisconnect.valueProperty().addListener(CONN_UPDATE);
-        taskQuery.valueProperty().addListener(CONN_UPDATE);
-    }
+		taskConnect.valueProperty().addListener(CONN_UPDATE);
+		taskDisconnect.valueProperty().addListener(CONN_UPDATE);
+	}
+
+
+	/**Task used for connecting to the database*/
+	public DBTask getConnectTask(){
+		return this.taskConnect;
+	}
+
+	/**Task used for disconnecting the database connection*/
+	public DBTask getDisconnectTask(){
+		return this.taskDisconnect;
+	}
 
     public void setPropertiesFileLocation(File file){
         this.tfPropFileLoc.setText(file.getPath());
@@ -69,27 +75,6 @@ public class DatabaseFXController {
 		this.tfPropFileLoc.setTooltip(new Tooltip(file.getName()));
     }
 
-	/**Task used for connection to the database*/
-    public Task getConnectTask(){
-        return this.taskConnect;
-    }
-
-	/**Task used for disconnecting the database connection*/
-    public Task getDisconnectTask(){
-        return this.taskDisconnect;
-    }
-
-	/**Task used for making database queries*/
-    public Task getQueryTask(){
-        return this.taskQuery;
-    }
-
-	/**Run a task. The task specified should be the tasks available in this class.*/
-    public void runTask(Task t) {
-        Thread thread = new Thread(t);
-        thread.setDaemon(true);
-        thread.run();
-    }
 
 	/**Update the connection status text*/
     public void updateStatusText(String text){

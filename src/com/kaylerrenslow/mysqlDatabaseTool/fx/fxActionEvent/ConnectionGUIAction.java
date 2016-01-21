@@ -32,10 +32,10 @@ public class ConnectionGUIAction implements EventHandler<ActionEvent> {
 
 
     private void connectButtonPress() {
-        dc.runTask(dc.getConnectTask());
+        dc.getConnectTask().runTask();
     }
 
     private void disconnectButtonPress() {
-        dc.runTask(this.dc.getDisconnectTask());
+        this.dc.getDisconnectTask().runTask();
     }
 }

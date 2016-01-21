@@ -16,8 +16,7 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     private static final String STYLE_DEFAULT = "";
 
     private DatabaseFXController dc;
-    private double prog;
-    private boolean error;
+    private double progress;
     private String style = STYLE_DEFAULT;
     private Task task;
 
@@ -47,19 +46,18 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newVal) {
         dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatus());
-        dc.updateConnectionProgress(this.prog);
+        dc.updateConnectionProgress(this.progress);
         dc.setProgressStyle(this.style);
     }
 
-    private void setProgress(double prog){
-        this.prog = prog;
+    private void setProgress(double progress){
+        this.progress = progress;
         this.style = STYLE_DEFAULT;
 		this.dc.setConsoleText(null);
     }
 
     private void error(String msg){
         this.setProgress(1);
-        this.error = true;
         this.style = STYLE_ERROR;
         this.dc.setConsoleText(msg);
     }

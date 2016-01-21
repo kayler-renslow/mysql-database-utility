@@ -22,8 +22,10 @@ public class DBTask extends Task{
 
     public final TaskType taskType;
 
+    private final DBConnectionUpdate connUpdate;
+
     public DBTask(DBConnectionUpdate connUpdate, TaskType type) {
-        super(connUpdate);
+        this.connUpdate = connUpdate;
         this.taskType = type;
     }
 
@@ -42,5 +44,12 @@ public class DBTask extends Task{
     public void run() {
         super.runAndReset();
     }
+
+	/**Run a task. The task specified should be the tasks available in this class.*/
+	public void runTask() {
+		Thread thread = new Thread(this);
+		thread.setDaemon(true);
+		thread.run();
+	}
 
 }

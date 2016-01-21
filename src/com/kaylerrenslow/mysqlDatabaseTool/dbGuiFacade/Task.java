@@ -8,11 +8,6 @@ package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
  * Created on 11/13/15.
  */
 public abstract class Task extends javafx.concurrent.Task<Object>{
-    protected final DBConnectionUpdate connUpdate;
-
-    public Task(DBConnectionUpdate connUpdate) {
-        this.connUpdate = connUpdate;
-    }
 
     public void updateValue(){
         try{
@@ -21,4 +16,5 @@ public abstract class Task extends javafx.concurrent.Task<Object>{
 			e.printStackTrace();
 		}
     }
+
 }
