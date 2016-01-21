@@ -8,6 +8,8 @@ package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
  */
 public interface IConnectionUpdate {
 
-    /**This method is used when the Database connection gets updated. (From connected to disconnected for example)*/
-    void connectionUpdate();
+    /**This method is used when the Database connection gets updated. (From connected to disconnected for example)
+     * @param msg text to say something about the update. Can be null.
+     * */
+    void connectionUpdate(String msg);
 }

@@ -22,7 +22,7 @@ public class DBTask extends Task{
 
     public final TaskType taskType;
 
-    public DBTask(ConnectionUpdate connUpdate, TaskType type) {
+    public DBTask(DBConnectionUpdate connUpdate, TaskType type) {
         super(connUpdate);
         this.taskType = type;
     }

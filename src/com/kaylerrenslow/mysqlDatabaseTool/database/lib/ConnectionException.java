@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.database;
+package com.kaylerrenslow.mysqlDatabaseTool.database.lib;
 
 /**
  * @author Kayler
@@ -9,6 +9,4 @@ public class ConnectionException extends Exception {
     public ConnectionException(String message) {
         super(message);
     }
-
-    public ConnectionException() {}
 }

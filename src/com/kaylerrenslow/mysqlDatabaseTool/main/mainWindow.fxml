@@ -29,18 +29,18 @@
                         <Insets bottom="3.0" top="3.0" />
                      </VBox.margin>
                   </Label>
-                  <TextArea fx:id="textAreaQuery" maxWidth="1.7976931348623157E308" prefHeight="93.0" prefWidth="206.0" promptText="Enter a MySQL query here." VBox.vgrow="NEVER">
+                  <TextArea fx:id="textAreaQuery" maxWidth="1.7976931348623157E308" prefHeight="93.0" prefWidth="269.0" promptText="Enter a MySQL query here." VBox.vgrow="NEVER">
                      <VBox.margin>
-                        <Insets right="5.0" />
+                        <Insets />
                      </VBox.margin></TextArea>
                   <Button fx:id="btnExecuteQuery" mnemonicParsing="false" text="Execute Query">
                      <VBox.margin>
                         <Insets top="3.0" />
                      </VBox.margin>
                   </Button>
-                  <Separator prefWidth="200.0">
+                  <Separator prefHeight="3.0" prefWidth="209.0">
                      <VBox.margin>
-                        <Insets bottom="15.0" top="15.0" />
+                        <Insets bottom="4.0" top="14.0" />
                      </VBox.margin>
                   </Separator>
                   <Label opacity="0.7" text="Database">
@@ -53,26 +53,31 @@
                         <Insets bottom="3.0" top="3.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="textFieldFileURL" maxWidth="-Infinity" promptText="Server Properties Location" VBox.vgrow="NEVER" />
-                  <Button fx:id="btnLocateProperties" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Locate Properties File">
+                  <TextField fx:id="textFieldFileURL" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="195.0" promptText="Server Properties Location" VBox.vgrow="NEVER" />
+                  <Button fx:id="btnLocateProperties" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="25.0" prefWidth="202.0" text="Locate Properties File">
                      <VBox.margin>
                         <Insets bottom="3.0" top="3.0" />
                      </VBox.margin>
                   </Button>
-                  <HBox maxHeight="-Infinity" prefHeight="32.0" prefWidth="243.0" spacing="3.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Button fx:id="btnConnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Connect" />
-                        <Button fx:id="btnDisconnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Disconnect" />
-                     </children>
+                  <HBox maxHeight="-Infinity" prefHeight="26.0" prefWidth="199.0" spacing="3.0" VBox.vgrow="ALWAYS">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <children>
+                        <Button fx:id="btnConnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="138.0" text="Connect" />
+                        <Button fx:id="btnDisconnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Disconnect" />
+                     </children>
                   </HBox>
                   <Label fx:id="labelConnectionStatus" opacity="0.7" text="Status: connecting..." />
-                  <ProgressBar fx:id="progressConnection" prefWidth="200.0" progress="0" />
+                  <ProgressBar fx:id="progressConnection" prefHeight="18.0" prefWidth="274.0" progress="0" />
+                  <TextArea fx:id="taConsole" prefHeight="43.0" prefWidth="217.0" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextArea>
                </children>
                <HBox.margin>
                   <Insets left="3.0" />

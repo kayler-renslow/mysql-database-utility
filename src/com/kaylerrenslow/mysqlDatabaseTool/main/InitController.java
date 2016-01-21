@@ -51,6 +51,9 @@ public class InitController implements Initializable{
     @FXML
     ProgressBar progressConnection;
 
+    @FXML
+    TextArea taConsole;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Program.loadMainWindow(this);

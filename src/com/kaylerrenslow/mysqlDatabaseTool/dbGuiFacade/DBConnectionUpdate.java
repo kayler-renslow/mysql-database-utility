@@ -10,7 +10,7 @@ import javafx.beans.value.ObservableValue;
  * When the Database connection updates (from connected to disconnected for example), the connectionUpdate() method is invoked.
  * Created on 11/9/15.
  */
-public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Object> {
+public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Object> {
 
     private static final String STYLE_ERROR = "-fx-accent:red";
     private static final String STYLE_DEFAULT = "";
@@ -21,12 +21,12 @@ public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Objec
     private String style = STYLE_DEFAULT;
     private Task task;
 
-    public ConnectionUpdate(DatabaseFXController dc) {
+    public DBConnectionUpdate(DatabaseFXController dc) {
         this.dc = dc;
     }
 
     @Override
-    public void connectionUpdate() {
+    public void connectionUpdate(String msg) {
         switch(Program.DATABASE_CONNECTION.status) {
             case CONNECTED:
                 setProgress(1.0);
@@ -38,10 +38,9 @@ public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Objec
                 setProgress(0);
                 break;
             default:
-                error();
+                error(msg);
                 break;
         }
-
         this.task.updateValue();
     }
 
@@ -55,12 +54,14 @@ public class ConnectionUpdate implements IConnectionUpdate, ChangeListener<Objec
     private void setProgress(double prog){
         this.prog = prog;
         this.style = STYLE_DEFAULT;
+		this.dc.setConsoleText(null);
     }
 
-    private void error(){
+    private void error(String msg){
         this.setProgress(1);
         this.error = true;
         this.style = STYLE_ERROR;
+        this.dc.setConsoleText(msg);
     }
 
 

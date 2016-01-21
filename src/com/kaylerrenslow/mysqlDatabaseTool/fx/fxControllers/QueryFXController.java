@@ -84,7 +84,8 @@ public class QueryFXController {
         this.dbTable.querySuccess(rs);
     }
 
-    void addEmptyRow(){
+    /**Add a new and empty entry to the database table*/
+    public void addEmptyRow(){
         if(Program.DATABASE_CONNECTION.isConnected()){
            this.dbTable.addEmptyRow();
         }else{

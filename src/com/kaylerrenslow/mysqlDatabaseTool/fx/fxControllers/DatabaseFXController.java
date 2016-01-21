@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers;
 
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.ConnectionUpdate;
+import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBConnectionUpdate;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent.ConnectionGUIAction;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent.LocatePropFileAction;
@@ -22,22 +22,20 @@ public class DatabaseFXController {
     private Button btnConnect;
     private Label lbStatus;
     private ProgressBar pbConnection;
+    private TextArea taConsole;
 
-    private final ConnectionUpdate CONN_UPDATE = new ConnectionUpdate(this);
-
-    private QueryFXController qc;
+    private final DBConnectionUpdate CONN_UPDATE = new DBConnectionUpdate(this);
 
     private DBTask taskConnect, taskDisconnect, taskQuery;
 
-    public DatabaseFXController(TextArea queryText, Button btnExecute, TableView queryResultTable, TextField tfPropFileLoc, Button btnLocateProperties, Button btnConnect, Button btnDisconnect, Label lbStatus, ProgressBar pbConnection) {
-        this.qc = new QueryFXController(this, queryText, btnExecute, queryResultTable);
-
+    public DatabaseFXController(TextField tfPropFileLoc, Button btnLocateProperties, Button btnConnect, Button btnDisconnect, Label lbStatus, ProgressBar pbConnection, TextArea taConsole) {
         this.tfPropFileLoc = tfPropFileLoc;
         this.btnLocateProperties = btnLocateProperties;
         this.btnConnect = btnConnect;
         this.btnDisconnect = btnDisconnect;
         this.lbStatus = lbStatus;
         this.pbConnection = pbConnection;
+        this.taConsole = taConsole;
 
         initialize();
     }
@@ -47,6 +45,8 @@ public class DatabaseFXController {
         btnConnect.setOnAction(new ConnectionGUIAction(this, true));
         btnDisconnect.setOnAction(new ConnectionGUIAction(this, false));
         btnLocateProperties.setOnAction(new LocatePropFileAction(this));
+
+		taConsole.setEditable(false);
 
         Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
 
@@ -66,6 +66,7 @@ public class DatabaseFXController {
     public void setPropertiesFileLocation(File file){
         this.tfPropFileLoc.setText(file.getPath());
         Program.DATABASE_CONNECTION.setConnectionPropertiesFile(file);
+		this.tfPropFileLoc.setTooltip(new Tooltip(file.getName()));
     }
 
 	/**Task used for connection to the database*/
@@ -105,8 +106,14 @@ public class DatabaseFXController {
         this.pbConnection.setStyle(fxStyle);
     }
 
-	/**Add a new and empty database entry*/
-    public void createNewEntry() {
-        this.qc.addEmptyRow();
+    /**Sets the console text*/
+    public void setConsoleText(String text){
+        this.taConsole.setText((text == null ? "" : text));
     }
+
+    /**Returns the console text*/
+    public String getConsoleText(){
+        return this.taConsole.getText();
+    }
+
 }

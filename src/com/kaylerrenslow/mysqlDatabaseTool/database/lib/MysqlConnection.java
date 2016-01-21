@@ -1,7 +1,5 @@
 package com.kaylerrenslow.mysqlDatabaseTool.database.lib;
 
-import com.kaylerrenslow.mysqlDatabaseTool.database.ConnectionException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,7 +20,6 @@ public class MysqlConnection{
 	private Connection conn;
 	private PrintStream stream;
 
-	private static final String SUCCESS = "Connection successfully opened.";
 
 	/** Creates a mysql connection object. Use loadConnectionProperties() to set the connection values,
 	 *   connect() and disconnect() to make the connection or to disconnect, and finally query(String) to run a query.
@@ -66,7 +63,7 @@ public class MysqlConnection{
 		}
 		this.server = r;
 
-		r = connectionProps.getProperty("com/kaylerrenslow/mysqlDatabaseTool/database");
+		r = connectionProps.getProperty("database");
 		if(r == null){
 			throw new IllegalArgumentException("database not defined in properties file");
 		}
@@ -77,9 +74,10 @@ public class MysqlConnection{
 
 
 	/** Attempts to connect to the MySQL database. */
-	public void connect(){
+	public void connect() throws ConnectionException{
+		String success = "Connection successfully opened.";
 		if(conn != null){
-			printToStream(SUCCESS);
+			printToStream(success);
 			return;
 		}
 		try{
@@ -87,10 +85,9 @@ public class MysqlConnection{
 		}catch(Exception e){
 			printToStream("An error occurred connecting to database.");
 			printStackTrace(e);
-			return;
+			throw new ConnectionException(e.getMessage());
 		}
-		printToStream(SUCCESS);
-		return;
+		printToStream(success);
 	}
 
 	/**Returns true if the connection is established, false otherwise*/
@@ -99,9 +96,7 @@ public class MysqlConnection{
 	}
 
 
-	/** Attempts to disconnect to the MySQL database.
-	 * @throws ConnectionException if the disconnect failed
-	 */
+	/** Attempts to disconnect to the MySQL database.*/
 	public void disconnect(){
 		String success = "Connection successfully closed.";
 		if(conn == null){
@@ -117,7 +112,6 @@ public class MysqlConnection{
 		}
 		this.conn = null;
 		printToStream(success);
-		return;
 	}
 
 	/** Runs a MySQL query.
@@ -128,7 +122,7 @@ public class MysqlConnection{
 	 */
 	public ResultSet query(String sql) throws QueryFailedException{
 		if(this.conn == null){
-			throw new IllegalStateException("Can not run a query without connecting.");
+			throw new IllegalStateException("Can not run a query when a connection isn't set.");
 		}
 		try {
 			Statement stmt = conn.createStatement();

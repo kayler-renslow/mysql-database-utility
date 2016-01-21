@@ -1,5 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.database;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.ConnectionException;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlConnection;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryFailedException;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.IConnectionUpdate;
@@ -48,7 +49,7 @@ public class DatabaseConnection {
     public void connect(){
         if(propFile == null){
             status = ConnectionStatus.NO_PROPERTIES;
-            connectionUpdate();
+            connectionUpdate("No properties file");
             return;
         }
         if(!conn.connectionPropertiesSet()){
@@ -57,25 +58,26 @@ public class DatabaseConnection {
             }catch(IllegalArgumentException e){
                 //e.printStackTrace();
                 status = ConnectionStatus.BAD_PROPERTIES;
-                connectionUpdate();
+                connectionUpdate(e.getMessage());
                 return;
             }catch(IOException ioe){
                 ioe.printStackTrace();
                 status = ConnectionStatus.BAD_PROPERTIES;
-                connectionUpdate();
+                connectionUpdate("Error occurred with the properties file.\n"+ioe.getMessage());
             }
         }
         status = ConnectionStatus.CONNECTING;
-        connectionUpdate();
-        conn.connect();
-
-        if(!conn.isConnected()){
+        connectionUpdate(null);
+        try{
+            conn.connect();
+        }catch(ConnectionException e){
             status = ConnectionStatus.CONNECTION_ERROR;
-            connectionUpdate();
+            connectionUpdate("An error occurred while trying to connect to the database.\n"+e.getMessage());
             return;
         }
+
         status = ConnectionStatus.CONNECTED;
-        connectionUpdate();
+        connectionUpdate(null);
     }
 
 
@@ -83,7 +85,7 @@ public class DatabaseConnection {
     public void disconnect(){
         conn.disconnect();
         status = ConnectionStatus.DISCONNECTED;
-        connectionUpdate();
+        connectionUpdate(null);
     }
 
 
@@ -97,7 +99,7 @@ public class DatabaseConnection {
         if(!this.isConnected()){
             this.status = ConnectionStatus.NOT_CONNECTED;
             this.qee.queryFail(Lang.NOTIF_BODY_NOT_CONNECTED);
-            connectionUpdate();
+            connectionUpdate(null);
             return;
         }
         try{
@@ -108,11 +110,11 @@ public class DatabaseConnection {
         }
     }
 
-    private void connectionUpdate(){
+    private void connectionUpdate(String msg){
         if(this.conUpdate == null){
             return;
         }
-        this.conUpdate.connectionUpdate();
+        this.conUpdate.connectionUpdate(msg);
     }
 
     public boolean isConnected(){

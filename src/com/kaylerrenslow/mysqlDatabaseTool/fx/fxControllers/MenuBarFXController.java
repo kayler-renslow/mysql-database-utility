@@ -11,13 +11,13 @@ import javafx.scene.control.MenuBar;
  */
 public class MenuBarFXController {
     private MenuBar mb;
-    private DatabaseFXController dc;
+    private QueryFXController qc;
     private Menu[] menus;
 
-    public MenuBarFXController(MenuBar mb, DatabaseFXController dc) {
-        this.dc = dc;
+    public MenuBarFXController(MenuBar mb, QueryFXController qc) {
+        this.qc = qc;
         this.mb = mb;
-        menus = new Menu[]{new MainMenu_Data(dc)};
+        menus = new Menu[]{new MainMenu_Data(qc)};
         this.mb.getMenus().addAll(menus);
 
     }

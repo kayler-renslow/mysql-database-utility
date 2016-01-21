@@ -8,15 +8,17 @@ package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
  * Created on 11/13/15.
  */
 public abstract class Task extends javafx.concurrent.Task<Object>{
-    protected final ConnectionUpdate connUpdate;
+    protected final DBConnectionUpdate connUpdate;
 
-    public Task(ConnectionUpdate connUpdate) {
+    public Task(DBConnectionUpdate connUpdate) {
         this.connUpdate = connUpdate;
     }
 
     public void updateValue(){
         try{
             this.updateValue(new Object()); //needs to be a new Object otherwise the update will be discarded
-        }catch(Exception e){}
+        }catch(Exception e){
+			e.printStackTrace();
+		}
     }
 }
