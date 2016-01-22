@@ -71,7 +71,6 @@ public class DatabaseFXController {
 
     public void setPropertiesFileLocation(File file){
         this.tfPropFileLoc.setText(file.getPath());
-        Program.DATABASE_CONNECTION.setConnectionPropertiesFile(file);
 		this.tfPropFileLoc.setTooltip(new Tooltip(file.getName()));
     }
 

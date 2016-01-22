@@ -4,6 +4,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.fxMenu.FXMenuItem;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.fxMenu.FXMenuUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.fxMenu.IFXMenuEventHandle;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
+import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TableView;
@@ -27,6 +28,7 @@ public class ContextMenu_DBTableView extends javafx.scene.control.ContextMenu im
         if(index == edit.getInsertionIndex()){
             System.out.println(this.tv.getSelectionModel().getSelectedItem().get(0));
             System.out.println("contextMenu db table view: edit clicked");
+            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow());
         }
     }
 }

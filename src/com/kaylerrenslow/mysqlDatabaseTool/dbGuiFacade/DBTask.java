@@ -47,6 +47,7 @@ public class DBTask extends Task{
 
 	/**Run a task. The task specified should be the tasks available in this class.*/
 	public void runTask() {
+		System.out.println("wwwwwwwwwwwttttttttttttffffffffff" + getClass());
 		Thread thread = new Thread(this);
 		thread.setDaemon(true);
 		thread.run();
