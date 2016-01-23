@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.dbControls.editableControl;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls.editableControl;
 
 /**
  * @author Kayler

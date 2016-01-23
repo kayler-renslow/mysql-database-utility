@@ -1,6 +1,6 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.dbControls.editableControl;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls.editableControl;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.dbControls.DBColumnEditors;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls.DBColumnEditors;
 import javafx.scene.web.HTMLEditor;
 
 /**

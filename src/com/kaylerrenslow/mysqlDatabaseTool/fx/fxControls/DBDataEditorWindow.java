@@ -1,6 +1,10 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls;
 
+import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls.DBColumnDataEditorPanel;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls.editableControl.EC_TextArea;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.window.IFXWindow;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -14,7 +18,9 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 	}
 
 	private void initialize() {
-
+		ObservableList<String> list = FXCollections.observableArrayList();
+		list.add("Test");
+		this.getChildren().add(new DBColumnDataEditorPanel("Column", "data type", list, new EC_TextArea()));
 	}
 
 	@Override
@@ -30,5 +36,10 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 	@Override
 	public int getInitHeight() {
 		return 320;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Edit Table Row Window";
 	}
 }

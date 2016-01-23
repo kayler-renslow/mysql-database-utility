@@ -26,6 +26,9 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 
     @Override
     public void connectionUpdate(String msg) {
+        if(this.task == null){
+			return;
+        }
         switch(Program.DATABASE_CONNECTION.status) {
             case CONNECTED:
                 setProgress(1.0);
