@@ -25,4 +25,6 @@ public abstract class EditableControl<E extends javafx.scene.layout.Region>{
 	public abstract void updateData(String data);
 
 	public abstract String getData();
+
+	public abstract boolean supportsData(String data);
 }

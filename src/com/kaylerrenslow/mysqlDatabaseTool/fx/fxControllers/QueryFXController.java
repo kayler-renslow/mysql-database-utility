@@ -1,6 +1,5 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers;
 
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBConnectionUpdate;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.QueryExecutedEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.FXUtil;
@@ -28,32 +27,27 @@ public class QueryFXController {
     private DBTableView dbTable;
     private QueryExecutedEvent qee = new QueryExecutedEvent(this);
 
-    private final DBConnectionUpdate CONN_UPDATE;
-
     private DBTask taskQuery;
 
     public QueryFXController(DatabaseFXController dc, TextArea queryText, Button btnExecute, TableView queryResultTable) {
         this.tfTextQuery = queryText;
         this.btnExecute = btnExecute;
         this.dbTable = new DBTableView(queryResultTable);
-        CONN_UPDATE = new DBConnectionUpdate(dc);
-        initialize();
+        initialize(dc);
     }
 
-    private void initialize() {
+    private void initialize(DatabaseFXController dc) {
         this.btnExecute.setOnAction(qee);
         Program.DATABASE_CONNECTION.setQueryExecutedEvent(qee);
         FXUtil.setEmptyContextMenu(this.tfTextQuery);
 
-        Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
-
-        setTasks();
+        setTasks(dc);
     }
 
-    private void setTasks() {
-        taskQuery = new DBTask(CONN_UPDATE, DBTask.TaskType.RUN_QUERY);
+    private void setTasks(DatabaseFXController dc) {
+        taskQuery = new DBTask(dc.CONN_UPDATE, DBTask.TaskType.RUN_QUERY);
 
-        taskQuery.valueProperty().addListener(CONN_UPDATE);
+        taskQuery.valueProperty().addListener(dc.CONN_UPDATE);
         /**Task used for connection to the database*/
     }
 

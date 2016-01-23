@@ -22,4 +22,9 @@ public class EC_TextArea extends EditableControl<TextArea>{
 	public String getData() {
 		return this.control.getText();
 	}
+
+	@Override
+	public boolean supportsData(String data) {
+		return true;
+	}
 }

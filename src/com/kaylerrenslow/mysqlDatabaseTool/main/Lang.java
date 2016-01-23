@@ -9,6 +9,7 @@ public class Lang {
     /**Title for properties file FileChooser*/
     public static final String CHOOSER_TITLE = "Locate Properties File";
 
+
     /**Connection status text for disconnected*/
     public static final String CONN_STATUS_DISCONNECTED = "disconnected";
 
@@ -25,13 +26,26 @@ public class Lang {
     public static final String CONN_STATUS_BAD_PROP = "bad prop file";
 
     /**Connection status text for when no properties file is selected*/
-    public static final String CONN_STATUS_NO_PROPERTIES = "no properties";
+    public static final String CONN_STATUS_NO_PROPERTIES = "no properties set";
+	public static final String CONN_STATUS_NO_PROPERTIES_LONG = "Properties file has not been located";
 
     /**Connection status text for when a query is run but the connection has not been set*/
     public static final String CONN_STATUS_NOT_CONNECTED = "no connection set";
+	public static final String CONN_STATUS_NOT_CONNECTED_LONG = "Not connected to a database";
 
 
-    public static final String NOTIF_TITLE_QUERY_FAILED = "Query failed";
+	/**Connection status text for when query is starting*/
+    public static final String CONN_STATUS_BEGIN_QUERY = "querying database";
+	public static final String CONN_STATUS_BEGIN_QUERY_LONG = "Querying database with SQL=";
+
+	/**Connection status text for when query is complete*/
+	public static final String CONN_STATUS_END_QUERY = "query complete";
+
+	/**Connection status text for when query had an error*/
+	public static final String CONN_STATUS_QUERY_ERROR = "query error";
+	public static final String CONN_STATUS_QUERY_ERROR_LONG = "Query failed";
+
+	public static final String NOTIF_TITLE_QUERY_FAILED = "Query failed";
 
     public static final String NOTIF_BODY_NOT_CONNECTED = "Not connected to a server.";
 

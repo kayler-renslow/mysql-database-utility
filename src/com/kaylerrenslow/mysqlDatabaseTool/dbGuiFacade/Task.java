@@ -1,20 +1,61 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 /**
  * @author Kayler
- * Wrapper class for the JavaFX Task system. This class also contains one additional method, updateValue(),
+ * Wrapper class for the JavaFX Task system. This class also contains one additional method, notifyValuePropertyListeners(),
  * which tells JavaFX's Task base implementation to notify listeners there is an update in the execution of the task.
  *
  * Created on 11/13/15.
  */
 public abstract class Task extends javafx.concurrent.Task<Object>{
 
-    public void updateValue(){
-        try{
+	private boolean debug;
+
+	public Task() {
+		this.exceptionProperty().addListener(new ChangeListener<Throwable>(){
+			@Override
+			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue, Throwable newValue) {
+				newValue.printStackTrace();
+			}
+		});
+
+		this.stateProperty().addListener(new ChangeListener<State>(){
+			@Override
+			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
+				if(debug){
+					System.out.println("Task State: " + newValue);
+				}
+			}
+		});
+	}
+
+	public void notifyValuePropertyListeners(){
+		try{
             this.updateValue(new Object()); //needs to be a new Object otherwise the update will be discarded
         }catch(Exception e){
 			e.printStackTrace();
 		}
     }
 
+	public void setStateDebug(boolean debug){
+		this.debug = debug;
+	}
+
+	/**Run a task on a new thread*/
+	public static void runTask(Task task) {
+		Thread thread = new Thread(task);
+		thread.setDaemon(true);
+		thread.setName(task.getName());
+		thread.start();
+	}
+
+	public abstract String getName();
+
+	@Override
+	public void run() {
+		super.runAndReset();
+	}
 }

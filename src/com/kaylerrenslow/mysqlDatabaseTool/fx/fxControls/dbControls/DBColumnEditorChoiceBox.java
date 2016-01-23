@@ -23,12 +23,14 @@ public class DBColumnEditorChoiceBox extends ChoiceBox<DBColumnEditors> implemen
 		this.getSelectionModel().selectedIndexProperty().addListener(this);
 	}
 
-	private void selectionChange(int index) {
-		this.panel.setDataEditor(this.getItems().get(index));
+	private boolean selectionChange(int index) {
+		return this.panel.setDataEditor(this.getItems().get(index));
 	}
 
 	@Override
 	public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		selectionChange(newValue.intValue());
+		if(!selectionChange(newValue.intValue())){
+			this.getSelectionModel().select(oldValue.intValue());
+		}
 	}
 }

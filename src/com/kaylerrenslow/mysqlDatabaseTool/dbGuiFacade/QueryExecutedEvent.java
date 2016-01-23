@@ -28,7 +28,7 @@ public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<Acti
 
     private void runQuery(){
         Program.DATABASE_CONNECTION.prepareQuery(qc.getQueryText());
-        this.qc.getQueryTask().runTask();
+        Task.runTask(this.qc.getQueryTask());
     }
 
     @Override

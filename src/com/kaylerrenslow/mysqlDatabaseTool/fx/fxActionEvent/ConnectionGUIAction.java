@@ -1,5 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent;
 
+import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.Task;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers.DatabaseFXController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,10 +33,10 @@ public class ConnectionGUIAction implements EventHandler<ActionEvent> {
 
 
     private void connectButtonPress() {
-        dc.getConnectTask().runTask();
+        Task.runTask(dc.getConnectTask());
     }
 
     private void disconnectButtonPress() {
-        this.dc.getDisconnectTask().runTask();
+        Task.runTask(this.dc.getDisconnectTask());
     }
 }

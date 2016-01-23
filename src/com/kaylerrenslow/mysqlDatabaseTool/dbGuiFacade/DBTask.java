@@ -25,32 +25,23 @@ public class DBTask extends Task{
     private final DBConnectionUpdate connUpdate;
 
     public DBTask(DBConnectionUpdate connUpdate, TaskType type) {
-        this.connUpdate = connUpdate;
+		this.connUpdate = connUpdate;
         this.taskType = type;
     }
 
     @Override
     protected Object call() throws Exception {
-        connUpdate.setTask(this);
+		connUpdate.setTask(this);
         switch (taskType){
             case CONNECT: Program.DATABASE_CONNECTION.connect(); break;
             case DISCONNECT: Program.DATABASE_CONNECTION.disconnect(); break;
             case RUN_QUERY: Program.DATABASE_CONNECTION.runQuery(); break;
         }
-        return this.getValue();
+		return null;
     }
 
-    @Override
-    public void run() {
-        super.runAndReset();
-    }
-
-	/**Run a task. The task specified should be the tasks available in this class.*/
-	public void runTask() {
-		System.out.println("wwwwwwwwwwwttttttttttttffffffffff" + getClass());
-		Thread thread = new Thread(this);
-		thread.setDaemon(true);
-		thread.run();
+	@Override
+	public String getName() {
+		return "DBTask:"+ this.taskType.name();
 	}
-
 }

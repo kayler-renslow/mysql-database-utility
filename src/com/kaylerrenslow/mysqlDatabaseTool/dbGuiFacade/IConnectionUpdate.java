@@ -10,6 +10,7 @@ public interface IConnectionUpdate {
 
     /**This method is used when the Database connection gets updated. (From connected to disconnected for example)
      * @param msg text to say something about the update. Can be null.
+     * @param data any data that may be a result of the connection update. can be null.
      * */
-    void connectionUpdate(String msg);
+    void connectionUpdate(String msg, Object data);
 }

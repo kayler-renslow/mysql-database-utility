@@ -1,7 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls;
 
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.dbControls.editableControl.EditableControl;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,13 +17,13 @@ public class DBColumnDataEditorPanel extends HBox{
 	private static final String EDITOR = "Editor";
 
 	private VBox columnInformationBox = new VBox();
-	private ObservableList<String> data;
+	private String data;
 	private String columnName, columnDataType;
 	private EditableControl dataEditor;
 
 	private DBColumnEditorChoiceBox cb_editors;
 
-	public DBColumnDataEditorPanel(String columnName, String columnDataTye, ObservableList<String> data, EditableControl dataEditor) {
+	public DBColumnDataEditorPanel(String columnName, String columnDataTye, String data, EditableControl dataEditor) {
 		this.data = data;
 		this.columnName = columnName;
 		this.columnDataType = columnDataTye;
@@ -40,21 +39,29 @@ public class DBColumnDataEditorPanel extends HBox{
 		HBox.setHgrow(dataEditor.getControl(), Priority.ALWAYS);
 		this.getChildren().add(dataEditor.getControl());
 
+		this.dataEditor.updateData(this.data);
+
 		cb_editors.getSelectionModel().select(0);
 	}
 
-	public void setDataEditor(DBColumnEditors editor){
+	public boolean setDataEditor(DBColumnEditors editor){
 		EditableControl editorInstance = null;
 		try{
 			editorInstance = (EditableControl) Class.forName(editor.clazz.getName()).getConstructor().newInstance();
 		}catch(Exception e){
 			e.printStackTrace();
-			return;
+			return false;
+		}
+		if(!editorInstance.supportsData(this.dataEditor.getData())){
+			return false;
 		}
 		editorInstance.updateData(this.dataEditor.getData());
 		this.getChildren().remove(1); //the editor
 		this.getChildren().add(editorInstance.getControl());
 		HBox.setHgrow(editorInstance.getControl(), Priority.ALWAYS);
+		this.dataEditor = editorInstance;
+
+		return true;
 	}
 
 	private void setupColumnInformationBox(){

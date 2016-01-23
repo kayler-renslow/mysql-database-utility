@@ -30,7 +30,18 @@ public class EC_DatePicker extends EditableControl<EpochDatePicker>{
 
 	@Override
 	public String getData() {
-		return this.control.getEpochFromPicker();
+		System.out.println(this.control.getEpoch());
+		return this.control.getEpoch();
+	}
+
+	@Override
+	public boolean supportsData(String data) {
+		try{
+			Calendar.getInstance().setTimeInMillis(Long.valueOf(data + "000"));
+		}catch (Exception e){
+			return false;
+		}
+		return true;
 	}
 }
 
@@ -55,23 +66,41 @@ class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
 					setDateFromEpoch(newValue);
 					tf_epoch.setStyle("");
 				}catch (Exception e){
-					tf_epoch.setStyle("-fx-background-color:red");
+					epochFormatError();
 				}
 			}
+
 		});
+	}
+
+	private void epochFormatError() {
+		tf_epoch.setStyle("-fx-background-color:red");
 	}
 
 	public void setDateFromEpoch(String epochInSeconds) {
 		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(Long.valueOf(epochInSeconds + "000"));
+		try{
+			c.setTimeInMillis(Long.valueOf(epochInSeconds));
+		}catch (Exception e){
+			epochFormatError();
+			setEpochStringValue(epochInSeconds);
+			return;
+		}
 		datePicker.setValue(LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
 	}
 
 	void updateEpochFromPicker() {
-		this.tf_epoch.setText(getEpochFromPicker());
+		setEpochStringValue(getEpochFromPicker());
+	}
+
+	void setEpochStringValue(String s) {
+		this.tf_epoch.setText(s);
 	}
 
 	public String getEpochFromPicker() {
+		if(this.datePicker.getValue() == null){
+			return "";
+		}
 		int month = this.datePicker.getValue().getMonthValue();
 		int day = this.datePicker.getValue().getDayOfMonth();
 		int year = this.datePicker.getValue().getYear();
@@ -84,5 +113,9 @@ class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
 	@Override
 	public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
 		updateEpochFromPicker();
+	}
+
+	public String getEpoch(){
+		return this.tf_epoch.getText();
 	}
 }

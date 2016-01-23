@@ -5,6 +5,8 @@ import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
+import java.sql.ResultSet;
+
 /**
  * @author Kayler
  * When the Database connection updates (from connected to disconnected for example), the connectionUpdate() method is invoked.
@@ -16,7 +18,8 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     private static final String STYLE_DEFAULT = "";
 
     private DatabaseFXController dc;
-    private double progress;
+
+	private double progress;
     private String style = STYLE_DEFAULT;
     private Task task;
 
@@ -25,11 +28,12 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     }
 
     @Override
-    public void connectionUpdate(String msg) {
+    public void connectionUpdate(String msg, Object data) {
         if(this.task == null){
+			System.err.println("WARNING: task for the DBConnectionUpdate is not set.");
 			return;
         }
-        switch(Program.DATABASE_CONNECTION.status) {
+        switch(Program.DATABASE_CONNECTION.getConnectionStatus()) {
             case CONNECTED:
                 setProgress(1.0);
                 break;
@@ -39,16 +43,37 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
             case DISCONNECTED:
                 setProgress(0);
                 break;
+			case BEGIN_QUERY:
+				setProgress(-1.0);
+				break;
+			case END_QUERY:
+				queryEnd(data);
+				setProgress(1.0);
+				break;
+			case QUERY_FAIL:
+				this.dc.setConsoleText(msg);
+				queryError(data);
+				break;
             default:
                 error(msg);
                 break;
         }
-        this.task.updateValue();
+		this.task.notifyValuePropertyListeners();
     }
 
-    @Override
+	private void queryError(Object data) {
+		Program.DATABASE_CONNECTION.getQueryExecuteEvent().queryFail((String) data);
+	}
+
+	private void queryEnd(Object data) {
+		Program.DATABASE_CONNECTION.getQueryExecuteEvent().querySuccess((ResultSet) data);
+	}
+
+	@Override
     public void changed(ObservableValue observable, Object oldValue, Object newVal) {
-        dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatus());
+		if(!Program.DATABASE_CONNECTION.getConnectionStatus().isQueryStatus()){
+			dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatusMessage());
+		}
         dc.updateConnectionProgress(this.progress);
         dc.setProgressStyle(this.style);
     }
@@ -62,7 +87,7 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     private void error(String msg){
         this.setProgress(1);
         this.style = STYLE_ERROR;
-        this.dc.setConsoleText(msg);
+		this.dc.setConsoleText(msg);
     }
 
 

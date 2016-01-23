@@ -28,7 +28,7 @@ public class ContextMenu_DBTableView extends javafx.scene.control.ContextMenu im
         if(index == edit.getInsertionIndex()){
 //            System.out.println(this.tv.getSelectionModel().getSelectedItem().get(0));
             System.out.println("contextMenu db table view: edit clicked");
-            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow());
+            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(tv.getSelectionModel().getSelectedItem()));
         }
     }
 }

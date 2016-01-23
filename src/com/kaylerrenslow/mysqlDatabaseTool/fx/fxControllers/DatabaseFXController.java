@@ -23,7 +23,7 @@ public class DatabaseFXController {
     private ProgressBar pbConnection;
     private TextArea taConsole;
 
-	private final DBConnectionUpdate CONN_UPDATE = new DBConnectionUpdate(this);
+	public final DBConnectionUpdate CONN_UPDATE = new DBConnectionUpdate(this);
 
 	private DBTask taskConnect, taskDisconnect;
 
@@ -40,12 +40,14 @@ public class DatabaseFXController {
     }
 
     private void initialize() {
-        lbStatus.setText(Program.DATABASE_CONNECTION.getConnectionStatus());
+        lbStatus.setText(Program.DATABASE_CONNECTION.getConnectionStatusMessage());
         btnConnect.setOnAction(new ConnectionGUIAction(this, true));
         btnDisconnect.setOnAction(new ConnectionGUIAction(this, false));
         btnLocateProperties.setOnAction(new LocatePropFileAction(this));
 
 		taConsole.setEditable(false);
+
+		Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
 
 		setTasks();
     }
