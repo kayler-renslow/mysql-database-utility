@@ -23,6 +23,8 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     private String style = STYLE_DEFAULT;
     private Task task;
 
+	private Object data;
+
     public DBConnectionUpdate(DatabaseFXController dc) {
         this.dc = dc;
     }
@@ -33,7 +35,7 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 			System.err.println("WARNING: task for the DBConnectionUpdate is not set.");
 			return;
         }
-        switch(Program.DATABASE_CONNECTION.getConnectionStatus()) {
+        switch(Program.DATABASE_CONNECTION.status()) {
             case CONNECTED:
                 setProgress(1.0);
                 break;
@@ -47,32 +49,42 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 				setProgress(-1.0);
 				break;
 			case END_QUERY:
-				queryEnd(data);
 				setProgress(1.0);
 				break;
 			case QUERY_FAIL:
 				this.dc.setConsoleText(msg);
-				queryError(data);
+				setProgress(1);
 				break;
             default:
                 error(msg);
                 break;
         }
+		this.data = data;
 		this.task.notifyValuePropertyListeners();
     }
 
-	private void queryError(Object data) {
-		Program.DATABASE_CONNECTION.getQueryExecuteEvent().queryFail((String) data);
+	private void queryError() {
+		Program.DATABASE_CONNECTION.getQueryExecuteEvent().queryFail((String) this.data);
 	}
 
-	private void queryEnd(Object data) {
-		Program.DATABASE_CONNECTION.getQueryExecuteEvent().querySuccess((ResultSet) data);
+	private void queryEnd() {
+		System.out.println(this.data.getClass());
+		Program.DATABASE_CONNECTION.getQueryExecuteEvent().querySuccess((ResultSet) this.data);
 	}
 
 	@Override
     public void changed(ObservableValue observable, Object oldValue, Object newVal) {
-		if(!Program.DATABASE_CONNECTION.getConnectionStatus().isQueryStatus()){
+		if(!Program.DATABASE_CONNECTION.status().isQueryStatus()){
 			dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatusMessage());
+		}else{
+			switch (Program.DATABASE_CONNECTION.status()){
+				case END_QUERY:
+					queryEnd();
+					break;
+				case QUERY_FAIL:
+					queryError();
+					break;
+			}
 		}
         dc.updateConnectionProgress(this.progress);
         dc.setProgressStyle(this.style);

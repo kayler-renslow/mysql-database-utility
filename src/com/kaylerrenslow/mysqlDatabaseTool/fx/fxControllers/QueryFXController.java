@@ -21,33 +21,34 @@ import java.sql.SQLException;
 public class QueryFXController {
     private static final String STYLE_ERROR = "-fx-background:red;";
     private static final String STYLE_DEFAULT = "";
+	private Button btnExecute;
 
-    private Button btnExecute;
-    private TextArea tfTextQuery;
-    private DBTableView dbTable;
-    private QueryExecutedEvent qee = new QueryExecutedEvent(this);
+	private TextArea tfTextQuery;
+	private DBTableView dbTable;
+	private DBConnectionFXController connControl;
+	public QueryExecutedEvent qee = new QueryExecutedEvent(this);
 
     private DBTask taskQuery;
 
-    public QueryFXController(DatabaseFXController dc, TextArea queryText, Button btnExecute, TableView queryResultTable) {
-        this.tfTextQuery = queryText;
+    public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, TableView queryResultTable) {
+        this.connControl = connControl;
+		this.tfTextQuery = queryText;
         this.btnExecute = btnExecute;
         this.dbTable = new DBTableView(queryResultTable);
-        initialize(dc);
     }
 
-    private void initialize(DatabaseFXController dc) {
+    public void initialize() {
         this.btnExecute.setOnAction(qee);
         Program.DATABASE_CONNECTION.setQueryExecutedEvent(qee);
         FXUtil.setEmptyContextMenu(this.tfTextQuery);
 
-        setTasks(dc);
+        setTasks();
     }
 
-    private void setTasks(DatabaseFXController dc) {
-        taskQuery = new DBTask(dc.CONN_UPDATE, DBTask.TaskType.RUN_QUERY);
+    private void setTasks() {
+        taskQuery = new DBTask(this.connControl.getConnectionUpdate(), DBTask.TaskType.RUN_QUERY);
 
-        taskQuery.valueProperty().addListener(dc.CONN_UPDATE);
+        taskQuery.valueProperty().addListener(this.connControl.getConnectionUpdate());
         /**Task used for connection to the database*/
     }
 
@@ -61,16 +62,6 @@ public class QueryFXController {
         return tfTextQuery.getText();
     }
 
-    /**Return the DBTableView instance*/
-    public DBTableView getDBTableInstance(){
-        return dbTable;
-    }
-
-    /**This should be invoked whenever a query succeeds.
-     * Simply resets the text query's style in case there was previously an error.*/
-    public void querySuccess(){
-        this.tfTextQuery.setStyle(STYLE_DEFAULT);
-    }
 
     /**This should be invoked whenever a query failed. It shows the context menu with the error and
      * set's the query's text area border red.*/
@@ -82,7 +73,8 @@ public class QueryFXController {
 
     /**Handle's the query result and adds it into the TableView*/
     public void querySuccess(ResultSet rs) throws SQLException{
-        this.dbTable.querySuccess(rs);
+        this.tfTextQuery.setStyle(STYLE_DEFAULT);
+        this.dbTable.addQueryDataToTable(rs);
     }
 
     /**Add a new and empty entry to the database table*/
@@ -90,7 +82,7 @@ public class QueryFXController {
         if(Program.DATABASE_CONNECTION.isConnected()){
            this.dbTable.addEmptyRow();
         }else{
-            this.getDBTableInstance().addTableRowError(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR, Lang.NOTIF_BODY_NOT_CONNECTED);
+            this.dbTable.addTableRowError(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR, Lang.NOTIF_BODY_NOT_CONNECTED);
         }
 
     }

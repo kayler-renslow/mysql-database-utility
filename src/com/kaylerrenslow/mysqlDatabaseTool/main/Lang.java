@@ -71,4 +71,6 @@ public class Lang {
     public static final String CONTEXT_MENU_DBTV_EDIT = "Edit";
 
     /*End constants for context menu strings*/
+
+	public static final String DB_COL_EDITOR_MSG_NOT_SUPPORTED = "Editor incompatible with data type.";
 }

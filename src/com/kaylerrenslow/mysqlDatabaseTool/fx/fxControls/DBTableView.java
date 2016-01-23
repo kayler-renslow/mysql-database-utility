@@ -15,103 +15,107 @@ import java.sql.SQLException;
 
 /**
  * @author Kayler
- * Class that holds a TableView for showing the database's information
- * Created on 12/9/15.
+ *         Class that holds a TableView for showing the database's information
+ *         Created on 12/9/15.
  */
-public class DBTableView {
-    public final TableView<ObservableList> tv;
-    private ContextMenu cm;
-    private boolean error = false;
+public class DBTableView{
+	public final TableView<ObservableList> tv;
+	private ContextMenu cm;
+	private boolean error = false;
 
-    public DBTableView(TableView tv) {
-        this.tv = tv;
-        this.tv.setEditable(true);
-        initializeContextMenu();
-    }
+	public DBTableView(TableView tv) {
+		this.tv = tv;
+		this.tv.setEditable(true);
+		initializeContextMenu();
+	}
 
-    private void initializeContextMenu() {
-        cm = new ContextMenu_DBTableView(this.tv);
-        this.tv.setContextMenu(cm);
-    }
+	private void initializeContextMenu() {
+		cm = new ContextMenu_DBTableView(this.tv);
+		this.tv.setContextMenu(cm);
+	}
 
-    /**Create a single column with one row on the query result TableView. The row displays the error message.*/
-    public void addTableRowError(String title, String errorMsg){
-        tv.getColumns().clear();
+	/**
+	 * Create a single column with one row on the query result TableView. The row displays the error message.
+	 */
+	public void addTableRowError(String title, String errorMsg) {
+		tv.getColumns().clear();
 
-        //add table column
-        TableColumn tcol = new TableColumn<>(title);
-        tcol.setCellValueFactory(new TableRowFactory(0));
-        tv.getColumns().add(tcol);
+		//add table column
+		TableColumn tcol = new TableColumn<>(title);
+		tcol.setCellValueFactory(new TableRowFactory(0));
+		tv.getColumns().add(tcol);
 
-        //object that holds all the row data
-        ObservableList<ObservableList> allRows = FXCollections.observableArrayList();
+		//object that holds all the row data
+		ObservableList<ObservableList> allRows = FXCollections.observableArrayList();
 
-        //parsed row data
-        ObservableList<String> row = FXCollections.observableArrayList();
-        final int LINE_LENGTH = 40;
-        String errorMsgPrime = Util.addLinebreaks(errorMsg, LINE_LENGTH);
+		//parsed row data
+		ObservableList<String> row = FXCollections.observableArrayList();
+		final int LINE_LENGTH = 40;
+		String errorMsgPrime = Util.addLinebreaks(errorMsg, LINE_LENGTH);
 
-        row.add(errorMsgPrime);
-        allRows.add(row);
-        tv.setItems(allRows);
+		row.add(errorMsgPrime);
+		allRows.add(row);
+		tv.setItems(allRows);
 
-        error = true;
+		error = true;
 
-    }
+	}
 
-    public void querySuccess(ResultSet rs) throws SQLException{
-        error = false;
-        tv.getColumns().clear();
-        ResultSetMetaData rsmd = rs.getMetaData();
+	/**
+	 * Adds the query data to the table
+	 */
+	public void addQueryDataToTable(ResultSet rs) throws SQLException {
+		error = false;
+		tv.getColumns().clear();
+		ResultSetMetaData rsmd = rs.getMetaData();
 
-        //add all the table columns
-        String colName;
-        TableColumn tcol;
-        for(int col = 1; col <= rsmd.getColumnCount(); col++){
-            colName = rsmd.getColumnName(col);
-            tcol = new TableColumn<>(colName);
-            tcol.setCellValueFactory(new TableRowFactory(col - 1));
-            tv.getColumns().add(tcol);
-        }
+		//add all the table columns
+		String colName;
+		TableColumn tcol;
+		for (int col = 1; col <= rsmd.getColumnCount(); col++){
+			colName = rsmd.getColumnName(col);
+			tcol = new TableColumn<>(colName);
+			tcol.setCellValueFactory(new TableRowFactory(col - 1));
+			tv.getColumns().add(tcol);
+		}
 
+		//object that holds all the row data
+		ObservableList<ObservableList> allRows = FXCollections.observableArrayList();
 
-        //object that holds all the row data
-        ObservableList<ObservableList> allRows = FXCollections.observableArrayList();
+		addNewRows(rs, rsmd.getColumnCount(), allRows);
 
-        addNewRows(rs, rsmd.getColumnCount(), allRows);
+		tv.setItems(allRows);
+	}
 
-        tv.setItems(allRows);
-    }
+	private void addNewRows(ResultSet rs, int columnCount, ObservableList allRows) throws SQLException {
+		ObservableList<String> row;
 
-    private void addNewRows(ResultSet rs, int columnCount, ObservableList allRows) throws SQLException{
-        ObservableList<String> row;
+		//now add all of the row data
+		while (rs.next()){
+			row = FXCollections.observableArrayList();
+			for (int col = 1; col <= columnCount; col++){
+				row.add(rs.getString(col));
+			}
+			allRows.add(row);
+		}
+	}
 
-        //now add all of the row data
-        while(rs.next()){
-            row = FXCollections.observableArrayList();
-            for(int col = 1; col<= columnCount; col++){
-                row.add(rs.getString(col));
-            }
-            allRows.add(row);
-        }
-    }
+	/**
+	 * Adds an empty row to the table view.
+	 */
+	public void addEmptyRow() {
+		if (tv.getColumns().size() <= 0 || error){
+			addTableRowError(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR, Lang.NOTIF_BODY_NO_COLUMNS);
+			return;
+		}
 
-    public void addEmptyRow(){
-        if(tv.getColumns().size() <= 0 || error){
-            addTableRowError(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR, Lang.NOTIF_BODY_NO_COLUMNS);
-            return;
-        }
+		String[] data = new String[this.tv.getColumns().size()];
+		for (int i = 0; i < this.tv.getColumns().size(); i++){
+			data[i] = "newData";
+		}
+		ObservableList<String> row = FXCollections.observableArrayList();
+		row.addAll(data);
+		this.tv.getItems().add(row);
+	}
 
-        String[] data = new String[this.tv.getColumns().size()];
-        for(int i = 0; i < this.tv.getColumns().size(); i++){
-            data[i] = "new " + this.tv.getColumns().get(i).getText();
-        }
-        ObservableList<String> row = FXCollections.observableArrayList();
-        row.addAll(data);
-        this.tv.getItems().add(row);
-    }
-
-    public void beginEdit(int row, int col){
-        this.tv.edit(row, this.tv.getColumns().get(col));
-    }
 }

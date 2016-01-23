@@ -101,7 +101,7 @@ public class DatabaseConnection{
 		return Lang.DB_STATUS_PREFIX + status.msg;
 	}
 
-	public ConnectionStatus getConnectionStatus(){
+	public ConnectionStatus status() {
 		return this.status;
 	}
 

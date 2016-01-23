@@ -6,11 +6,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  *@author Kayler
- * This class is used when the execute query button is pressed. When the query itself is finished, it runs either querySuccess() or queryFail()
+ * This class is used when the execute query button is pressed. When the query itself is finished, querySuccess() or queryFail() is ran from DBConnectionUpdate
  *
  * Created on 11/9/15.
  */
@@ -34,8 +33,7 @@ public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<Acti
     @Override
     public void querySuccess(ResultSet rs) {
         try{
-            handleQuery(rs);
-            this.qc.querySuccess();
+            this.qc.querySuccess(rs);
         }catch(Exception e){
             e.printStackTrace();
             this.queryFail(e.getMessage());
@@ -47,9 +45,5 @@ public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<Acti
         this.qc.queryFailed(failMsg);
     }
 
-    /**Handles the result of the query by adding all the query data into the tableview*/
-    private void handleQuery(ResultSet rs) throws SQLException{
-        this.qc.querySuccess(rs);
-    }
 
 }

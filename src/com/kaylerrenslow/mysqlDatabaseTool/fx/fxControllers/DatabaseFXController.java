@@ -1,10 +1,11 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers;
 
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBConnectionUpdate;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent.ConnectionGUIAction;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.fxActionEvent.LocatePropFileAction;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
 
 import java.io.File;
@@ -15,7 +16,8 @@ import java.io.File;
  * Created on 11/6/15.
  */
 public class DatabaseFXController {
-    private Button btnLocateProperties;
+	private DBConnectionFXController connControl;
+	private Button btnLocateProperties;
     private Button btnDisconnect;
     private TextField tfPropFileLoc;
     private Button btnConnect;
@@ -23,12 +25,11 @@ public class DatabaseFXController {
     private ProgressBar pbConnection;
     private TextArea taConsole;
 
-	public final DBConnectionUpdate CONN_UPDATE = new DBConnectionUpdate(this);
-
 	private DBTask taskConnect, taskDisconnect;
 
-    public DatabaseFXController(TextField tfPropFileLoc, Button btnLocateProperties, Button btnConnect, Button btnDisconnect, Label lbStatus, ProgressBar pbConnection, TextArea taConsole) {
-        this.tfPropFileLoc = tfPropFileLoc;
+    public DatabaseFXController(DBConnectionFXController connControl, TextField tfPropFileLoc, Button btnLocateProperties, Button btnConnect, Button btnDisconnect, Label lbStatus, ProgressBar pbConnection, TextArea taConsole) {
+        this.connControl = connControl;
+		this.tfPropFileLoc = tfPropFileLoc;
         this.btnLocateProperties = btnLocateProperties;
         this.btnConnect = btnConnect;
         this.btnDisconnect = btnDisconnect;
@@ -36,28 +37,39 @@ public class DatabaseFXController {
         this.pbConnection = pbConnection;
         this.taConsole = taConsole;
 
-        initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
         lbStatus.setText(Program.DATABASE_CONNECTION.getConnectionStatusMessage());
         btnConnect.setOnAction(new ConnectionGUIAction(this, true));
         btnDisconnect.setOnAction(new ConnectionGUIAction(this, false));
         btnLocateProperties.setOnAction(new LocatePropFileAction(this));
 
+		tfPropFileLoc.textProperty().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				boolean good = LocatePropFileAction.attemptSetConnectionPropertiesFile(newValue);
+				if(good){
+					tfPropFileLoc.setStyle("");
+				}else{
+					tfPropFileLoc.setStyle("-fx-background-color:red;-fx-text-fill:white;");
+				}
+			}
+		});
+
 		taConsole.setEditable(false);
 
-		Program.DATABASE_CONNECTION.setConnectionUpdate(CONN_UPDATE);
+		Program.DATABASE_CONNECTION.setConnectionUpdate(connControl.getConnectionUpdate());
 
 		setTasks();
     }
 
 	private void setTasks(){
-		taskConnect = new DBTask(CONN_UPDATE, DBTask.TaskType.CONNECT);
-		taskDisconnect = new DBTask(CONN_UPDATE, DBTask.TaskType.DISCONNECT);
+		taskConnect = new DBTask(connControl.getConnectionUpdate(), DBTask.TaskType.CONNECT);
+		taskDisconnect = new DBTask(connControl.getConnectionUpdate(), DBTask.TaskType.DISCONNECT);
 
-		taskConnect.valueProperty().addListener(CONN_UPDATE);
-		taskDisconnect.valueProperty().addListener(CONN_UPDATE);
+		taskConnect.valueProperty().addListener(connControl.getConnectionUpdate());
+		taskDisconnect.valueProperty().addListener(connControl.getConnectionUpdate());
 	}
 
 

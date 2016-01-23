@@ -11,17 +11,23 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
- * Created by Kayler on 01/21/2016.
+ * @author Kayler
+ * Created on 01/21/2016.
  */
 public class DBDataEditorWindow extends VBox implements IFXWindow{
 
 	private ObservableList<String> data;
 	private VBox content = new VBox();
-	private ScrollPane scrollPane = new ScrollPane(content);
 
 	public DBDataEditorWindow(ObservableList<String> data) {
+		ScrollPane scrollPane = new ScrollPane(content);
 		this.data = data;
-		VBox.setVgrow(this.scrollPane, Priority.ALWAYS);
+		this.fillWidthProperty().set(true);
+		this.content.fillWidthProperty().set(true);
+		scrollPane.setFitToWidth(true);
+
+		VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
 		this.getChildren().add(scrollPane);
 		initialize();
 	}
@@ -29,8 +35,14 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 	private void initialize() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		list.add("Test");
+		DBColumnDataEditorPanel panel;
+		//D:\Archive\Intellij Files\Website Database Tool\connection.properties
 		for(int i = 0; i < this.data.size(); i++){
-			this.content.getChildren().add(new DBColumnDataEditorPanel("Column", "data type", data.get(i), new EC_TextArea()));
+			panel = new DBColumnDataEditorPanel("Column", "data type", data.get(i), new EC_TextArea());
+			if(i%2 != 0){
+				panel.setStyle("-fx-background-color:#dddddd");
+			}
+			this.content.getChildren().add(panel);
 		}
 	}
 
@@ -53,4 +65,5 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 	public String getTitle() {
 		return "Edit Table Row Window";
 	}
+
 }

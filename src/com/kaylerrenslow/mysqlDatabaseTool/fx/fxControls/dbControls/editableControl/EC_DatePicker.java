@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 /**
  * @author Kayler
- *         Created by on 01/21/2016.
+ *         Created on 01/21/2016
  */
 public class EC_DatePicker extends EditableControl<EpochDatePicker>{
 
@@ -24,24 +24,17 @@ public class EC_DatePicker extends EditableControl<EpochDatePicker>{
 
 	@Override
 	public void updateData(String data) {
-		this.control.setDateFromEpoch(data);
-		this.control.updateEpochFromPicker();
+		this.control.setEpochTfValue(data);
 	}
 
 	@Override
 	public String getData() {
-		System.out.println(this.control.getEpoch());
 		return this.control.getEpoch();
 	}
 
 	@Override
 	public boolean supportsData(String data) {
-		try{
-			Calendar.getInstance().setTimeInMillis(Long.valueOf(data + "000"));
-		}catch (Exception e){
-			return false;
-		}
-		return true;
+		return false;
 	}
 }
 
@@ -54,16 +47,15 @@ class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
 
 	public EpochDatePicker() {
 		Label lbl_epoch = new Label(EPOCH);
-		lbl_epoch.setOpaqueInsets(margin);
-		datePicker.setOpaqueInsets(margin);
+		HBox.setMargin(lbl_epoch, margin);
+		HBox.setMargin(datePicker, margin);
 		this.getChildren().addAll(datePicker, lbl_epoch, tf_epoch);
 		datePicker.valueProperty().addListener(this);
 		tf_epoch.textProperty().addListener(new ChangeListener<String>(){
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				try{
-					Calendar.getInstance().setTimeInMillis(Long.valueOf(newValue));
-					setDateFromEpoch(newValue);
+					Calendar.getInstance().setTimeInMillis(Long.valueOf(newValue + "000"));
 					tf_epoch.setStyle("");
 				}catch (Exception e){
 					epochFormatError();
@@ -74,30 +66,25 @@ class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
 	}
 
 	private void epochFormatError() {
-		tf_epoch.setStyle("-fx-background-color:red");
+		tf_epoch.setStyle("-fx-background-color:red;-fx-text-fill:white;");
 	}
 
-	public void setDateFromEpoch(String epochInSeconds) {
-		Calendar c = Calendar.getInstance();
+	public void setEpochTfValue(String epochInSeconds) {
 		try{
-			c.setTimeInMillis(Long.valueOf(epochInSeconds));
+			Calendar.getInstance().setTimeInMillis(Long.valueOf(epochInSeconds + "000"));
 		}catch (Exception e){
 			epochFormatError();
-			setEpochStringValue(epochInSeconds);
-			return;
 		}
-		datePicker.setValue(LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
+		this.tf_epoch.setText(epochInSeconds);
 	}
+
 
 	void updateEpochFromPicker() {
-		setEpochStringValue(getEpochFromPicker());
+		setEpochTfValue(getEpochFromPicker());
 	}
 
-	void setEpochStringValue(String s) {
-		this.tf_epoch.setText(s);
-	}
 
-	public String getEpochFromPicker() {
+	private String getEpochFromPicker() {
 		if(this.datePicker.getValue() == null){
 			return "";
 		}
