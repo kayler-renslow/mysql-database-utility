@@ -9,8 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Kayler
@@ -25,6 +28,8 @@ public class EC_DatePicker extends EditableControl<EpochDatePicker>{
 	@Override
 	public void updateData(String data) {
 		this.control.setEpochTfValue(data);
+		this.control.initPicker();
+		this.control.pickerInitialized = true;
 	}
 
 	@Override
@@ -34,28 +39,37 @@ public class EC_DatePicker extends EditableControl<EpochDatePicker>{
 
 	@Override
 	public boolean supportsData(String data) {
-		try{
-			Long.valueOf(data);
-		}catch (Exception e){
-			return false;
-		}
-		return true;
+		return data.matches("[0-9]*");
 	}
 }
 
-class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
+class EpochDatePicker extends HBox{
 	private static final Insets margin = new Insets(0, 5, 0, 0);
 	private static final String EPOCH = "Epoch";
 
 	public DatePicker datePicker = new DatePicker();
 	public TextField tf_epoch = new TextField();
 
+	boolean pickerInitialized = false;
+
 	public EpochDatePicker() {
+		initialize();
+
+	}
+
+	private void initialize() {
 		Label lbl_epoch = new Label(EPOCH);
 		HBox.setMargin(lbl_epoch, margin);
 		HBox.setMargin(datePicker, margin);
 		this.getChildren().addAll(datePicker, lbl_epoch, tf_epoch);
-		datePicker.valueProperty().addListener(this);
+
+		datePicker.valueProperty().addListener(new ChangeListener<LocalDate>(){
+			@Override
+			public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+				updateEpochFromPicker();
+			}
+		});
+
 		tf_epoch.textProperty().addListener(new ChangeListener<String>(){
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -83,14 +97,15 @@ class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
 		this.tf_epoch.setText(epochInSeconds);
 	}
 
-
 	void updateEpochFromPicker() {
+		if (!pickerInitialized){
+			return;
+		}
 		setEpochTfValue(getEpochFromPicker());
 	}
 
-
 	private String getEpochFromPicker() {
-		if(this.datePicker.getValue() == null){
+		if (this.datePicker.getValue() == null){
 			return "";
 		}
 		int month = this.datePicker.getValue().getMonthValue();
@@ -102,12 +117,19 @@ class EpochDatePicker extends HBox implements ChangeListener<LocalDate>{
 		return c.getTimeInMillis() / 1000 + "";
 	}
 
-	@Override
-	public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-		updateEpochFromPicker();
+	public String getEpoch() {
+		return this.tf_epoch.getText();
 	}
 
-	public String getEpoch(){
-		return this.tf_epoch.getText();
+	public void initPicker() {
+		try{
+			Calendar c = Calendar.getInstance();
+			Date d = new Date(Long.valueOf(this.getEpoch() + "000"));
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			LocalDate ld = LocalDate.parse(df.format(d));
+			datePicker.setValue(ld);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }

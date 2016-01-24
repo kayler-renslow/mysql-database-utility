@@ -1,5 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.control;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.SQLTypes;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.factory.TableRowFactory;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Util;
@@ -22,6 +23,8 @@ public class DBTableView{
 	public final TableView<ObservableList> tv;
 	private ContextMenu cm;
 	private boolean error = false;
+	private String[] columnTypes;
+	private String[] columnNames;
 
 	public DBTableView(TableView tv) {
 		this.tv = tv;
@@ -30,7 +33,7 @@ public class DBTableView{
 	}
 
 	private void initializeContextMenu() {
-		cm = new ContextMenu_DBTableView(this.tv);
+		cm = new ContextMenu_DBTableView(this);
 		this.tv.setContextMenu(cm);
 	}
 
@@ -62,7 +65,7 @@ public class DBTableView{
 	}
 
 	/**
-	 * Adds the query data to the table
+	 * Clears the table and then adds the query data to the table.
 	 */
 	public void addQueryDataToTable(ResultSet rs) throws SQLException {
 		error = false;
@@ -72,8 +75,12 @@ public class DBTableView{
 		//add all the table columns
 		String colName;
 		TableColumn tcol;
+		this.columnTypes = new String[rsmd.getColumnCount()];
+		this.columnNames = new String[rsmd.getColumnCount()];
 		for (int col = 1; col <= rsmd.getColumnCount(); col++){
 			colName = rsmd.getColumnName(col);
+			this.columnTypes[col - 1] = SQLTypes.convert(rsmd.getColumnType(col));
+			this.columnNames[col - 1] = colName;
 			tcol = new TableColumn<>(colName);
 			tcol.setCellValueFactory(new TableRowFactory(col - 1));
 			tv.getColumns().add(tcol);
@@ -116,6 +123,14 @@ public class DBTableView{
 		ObservableList<String> row = FXCollections.observableArrayList();
 		row.addAll(data);
 		this.tv.getItems().add(row);
+	}
+
+	public String[] getColumnTypes(){
+		return this.columnTypes;
+	}
+
+	public String[] getColumnNames(){
+		return this.columnNames;
 	}
 
 }

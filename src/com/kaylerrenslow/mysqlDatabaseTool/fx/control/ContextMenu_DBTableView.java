@@ -7,7 +7,9 @@ import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+
+import java.util.Iterator;
 
 /**
  * @author Kayler
@@ -16,19 +18,31 @@ import javafx.scene.control.TableView;
 public class ContextMenu_DBTableView extends javafx.scene.control.ContextMenu implements IFXMenuEventHandle {
 
     private FXMenuItem edit = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_EDIT);
-    private TableView<ObservableList> tv;
+    private DBTableView dbtv;
+	private String[] columns;
 
-    public ContextMenu_DBTableView(TableView tv){
+    public ContextMenu_DBTableView(DBTableView dbtv){
         FXMenuUtil.addItems(this, this, edit);
-        this.tv = tv;
+        this.dbtv = dbtv;
     }
 
     @Override
     public void handle(int index, ActionEvent event) {
         if(index == edit.getInsertionIndex()){
-//            System.out.println(this.tv.getSelectionModel().getSelectedItem().get(0));
-            System.out.println("contextMenu db table view: edit clicked");
-            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(tv.getSelectionModel().getSelectedItem()));
+			if(this.dbtv.tv.getSelectionModel().getSelectedItem() == null){
+				return;
+			}
+            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbtv.getColumnNames(), this.dbtv.getColumnTypes(), this.dbtv.tv.getSelectionModel().getSelectedItem()));
+        }
+    }
+
+    private void setColumns(){
+		this.columns = new String[this.dbtv.tv.getColumns().size()];
+        Iterator<TableColumn<ObservableList, ?>> iter = this.dbtv.tv.getColumns().listIterator();
+        int i = 0;
+        while(iter.hasNext()){
+			this.columns[i] = iter.next().getText();
+            i++;
         }
     }
 }

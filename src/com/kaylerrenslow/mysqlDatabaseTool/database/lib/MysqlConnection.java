@@ -136,15 +136,12 @@ public class MysqlConnection{
 		}
 	}
 
-    /**TODO for outside implementation: getColumns(null,null,tablename,null)*/
 	public DatabaseMetaData getDBMetadata() throws SQLException{
 		if(!this.isConnected()){
 			throw new IllegalStateException("Can't retrieve database metadata when a connection isn't set.");
 		}
 
-		DatabaseMetaData dmd = this.conn.getMetaData();
-        /*getColumns(null,null,tablename,null)*/
-		return dmd;
+		return this.conn.getMetaData();
 	}
 
 	private Connection createConnection() throws SQLException {

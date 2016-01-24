@@ -3,7 +3,6 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.control;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.DBColumnDataEditorPanel;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editor.EC_TextArea;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Priority;
@@ -19,7 +18,7 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 	private ObservableList<String> data;
 	private VBox content = new VBox();
 
-	public DBDataEditorWindow(ObservableList<String> data) {
+	public DBDataEditorWindow(String[] columnNames, String[] columnTypes, ObservableList<String> data) {
 		ScrollPane scrollPane = new ScrollPane(content);
 		this.data = data;
 		this.fillWidthProperty().set(true);
@@ -29,16 +28,13 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 		VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
 		this.getChildren().add(scrollPane);
-		initialize();
+		initialize(columnNames, columnTypes);
 	}
 
-	private void initialize() {
-		ObservableList<String> list = FXCollections.observableArrayList();
-		list.add("Test");
+	private void initialize(String[] columnNames, String[] columnTypes) {
 		DBColumnDataEditorPanel panel;
-		//D:\Archive\Intellij Files\Website Database Tool\connection.properties
 		for(int i = 0; i < this.data.size(); i++){
-			panel = new DBColumnDataEditorPanel("Column", "data type", data.get(i), new EC_TextArea());
+			panel = new DBColumnDataEditorPanel(columnNames[i], columnTypes[i], data.get(i), new EC_TextArea());
 			if(i%2 != 0){
 				panel.setStyle("-fx-background-color:#dddddd");
 			}

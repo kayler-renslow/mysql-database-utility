@@ -18,7 +18,11 @@ import javafx.scene.layout.VBox;
 public class DBColumnDataEditorPanel extends HBox{
 	private static final Insets padding = new Insets(5, 5, 5, 5);
 	private static final Insets marginTop5 = new Insets(5, 0, 0, 0);
+	private static final Insets marginTop10 = new Insets(10, 0, 0, 0);
 	private static final String EDITOR = "Editor";
+	private static final String COL_NAME = "Column Name";
+	private static final String COL_TYPE = "Column Type";
+	private static final String TEXT_BOLD = "-fx-font-weight:bold";
 
 	private VBox columnInformationBox = new VBox();
 	private String data;
@@ -79,25 +83,28 @@ public class DBColumnDataEditorPanel extends HBox{
 		this.columnInformationBox.setPadding(padding);
 		this.columnInformationBox.setMinWidth(140);
 
+		Label lbl_cname_label = new Label(COL_NAME);
+		lbl_cname_label.setStyle(TEXT_BOLD);
+
 		Label lbl_cname = new Label(columnName);
-		lbl_cname.setOpaqueInsets(marginTop5);
+
+		Label lbl_ctype_label = new Label(COL_TYPE);
+		lbl_ctype_label.setStyle(TEXT_BOLD);
+		VBox.setMargin(lbl_ctype_label, marginTop10);
 
 		Label lbl_ctype = new Label(columnDataType);
-		lbl_ctype.setOpaqueInsets(marginTop5);
 
 		Label lbl_editor = new Label(EDITOR);
-		lbl_editor.setOpaqueInsets(marginTop5);
+		lbl_editor.setStyle(TEXT_BOLD);
+		VBox.setMargin(lbl_editor, marginTop10);
 
 		cb_editors = new DBColumnEditorChoiceBox(this);
-//		cb_editors.getSelectionModel().select(DBColumnEditors.TEXT.editorName);
-		this.columnInformationBox.getChildren().addAll(lbl_cname, lbl_ctype, lbl_editor, cb_editors);
+		this.columnInformationBox.getChildren().addAll(lbl_cname_label, lbl_cname, lbl_ctype_label, lbl_ctype, lbl_editor, cb_editors);
 	}
 
 	private void addErrorMessage(String msg){
 		Label lbl = new Label(msg);
-//		lbl.setStyle("-fx-background-color:white;-fx-text-fill:red;");
 		lbl.setOpaqueInsets(padding);
-//		lbl.setFont(Font.font(15));
 		HBox h = new HBox();
 		h.setOpaqueInsets(padding);
 		Button close = new Button("OK");

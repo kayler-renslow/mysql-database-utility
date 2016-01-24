@@ -9,7 +9,9 @@ import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 
 /**
  * @author Kayler
@@ -113,6 +115,7 @@ public class DatabaseConnection{
 			connectionUpdate(Lang.CONN_STATUS_NOT_CONNECTED_LONG, Lang.NOTIF_BODY_NOT_CONNECTED, ConnectionStatus.NOT_CONNECTED);
 			return;
 		}
+		g();
 		try{
 			connectionUpdate(Lang.CONN_STATUS_BEGIN_QUERY_LONG + this.sql, null, ConnectionStatus.QUERY_BEGIN);
 			ResultSet rs = conn.query(this.sql);
@@ -129,6 +132,24 @@ public class DatabaseConnection{
 			return;
 		}
 		this.conUpdate.connectionUpdate(msg, data);
+	}
+
+	public void g(){
+		try{
+			DatabaseMetaData dmd = this.conn.getDBMetadata();
+			ResultSet schm = dmd.getSchemas();
+
+			ResultSetMetaData rsmd = schm.getMetaData();
+			for(int i = 1; i <= rsmd.getColumnCount(); i++){
+				while(schm.next()){
+					System.out.println(schm.getString(i));
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return;
+		}
+
 	}
 
 	public boolean isConnected() {
