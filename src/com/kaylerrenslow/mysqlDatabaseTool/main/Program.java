@@ -15,7 +15,7 @@ public class Program {
     /**Initial main window height*/
     public static final int WINDOW_HEIGHT = 480;
 
-    /**Controllers object that contains all the fx.fxControllers.*/
+    /**Controllers object that contains all the fx.controllers.*/
     public static Controllers controllers;
 
     /**There is only one DatabaseConnection object at all times for the program and it is this one.*/

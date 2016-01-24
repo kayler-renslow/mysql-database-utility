@@ -114,9 +114,9 @@ public class DatabaseConnection{
 			return;
 		}
 		try{
-			connectionUpdate(Lang.CONN_STATUS_BEGIN_QUERY_LONG + this.sql, null, ConnectionStatus.BEGIN_QUERY);
+			connectionUpdate(Lang.CONN_STATUS_BEGIN_QUERY_LONG + this.sql, null, ConnectionStatus.QUERY_BEGIN);
 			ResultSet rs = conn.query(this.sql);
-			connectionUpdate(null, rs, ConnectionStatus.END_QUERY);
+			connectionUpdate(null, rs, ConnectionStatus.QUERY_END);
 		}catch (QueryFailedException e){
 			connectionUpdate(Lang.CONN_STATUS_QUERY_ERROR_LONG, e.getMessage(), ConnectionStatus.QUERY_FAIL);
 		}

@@ -32,6 +32,14 @@ public abstract class Task extends javafx.concurrent.Task<Object>{
 		});
 	}
 
+	@Override
+	protected void updateValue(Object value) {
+		if(value == null){
+			return; //call() is finished, so end the task
+		}
+		super.updateValue(value); //call() wants to update the value listeners
+	}
+
 	public void notifyValuePropertyListeners(){
 		try{
             this.updateValue(new Object()); //needs to be a new Object otherwise the update will be discarded

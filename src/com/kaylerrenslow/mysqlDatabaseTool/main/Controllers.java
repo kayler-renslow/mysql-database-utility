@@ -1,9 +1,9 @@
 package com.kaylerrenslow.mysqlDatabaseTool.main;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers.DBConnectionFXController;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers.DatabaseFXController;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers.MenuBarFXController;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers.QueryFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DBConnectionFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DatabaseFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.MenuBarFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 
 /**
  * @author Kayler

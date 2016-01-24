@@ -37,7 +37,7 @@ public class DBTask extends Task{
             case DISCONNECT: Program.DATABASE_CONNECTION.disconnect(); break;
             case RUN_QUERY: Program.DATABASE_CONNECTION.runQuery(); break;
         }
-		return null;
+		return null; //return null so updateValue() won't call the value change listener
     }
 
 	@Override

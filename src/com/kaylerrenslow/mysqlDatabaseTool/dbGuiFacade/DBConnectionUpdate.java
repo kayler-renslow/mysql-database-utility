@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControllers.DatabaseFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DatabaseFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,7 +31,9 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 
     @Override
     public void connectionUpdate(String msg, Object data) {
-        if(this.task == null){
+        /*This method is NOT run on the JavaFX thread.*/
+
+		if(this.task == null){
 			System.err.println("WARNING: task for the DBConnectionUpdate is not set.");
 			return;
         }
@@ -45,10 +47,10 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
             case DISCONNECTED:
                 setProgress(0);
                 break;
-			case BEGIN_QUERY:
+			case QUERY_BEGIN:
 				setProgress(-1.0);
 				break;
-			case END_QUERY:
+			case QUERY_END:
 				setProgress(1.0);
 				break;
 			case QUERY_FAIL:
@@ -68,23 +70,24 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 	}
 
 	private void queryEnd() {
-		System.out.println(this.data.getClass());
 		Program.DATABASE_CONNECTION.getQueryExecuteEvent().querySuccess((ResultSet) this.data);
 	}
 
 	@Override
     public void changed(ObservableValue observable, Object oldValue, Object newVal) {
-		if(!Program.DATABASE_CONNECTION.status().isQueryStatus()){
-			dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatusMessage());
-		}else{
+		/*this method IS ran on the JavaFX thread*/
+
+		if(Program.DATABASE_CONNECTION.status().isQueryStatus()){
 			switch (Program.DATABASE_CONNECTION.status()){
-				case END_QUERY:
+				case QUERY_END:
 					queryEnd();
 					break;
 				case QUERY_FAIL:
 					queryError();
 					break;
 			}
+		}else{
+			dc.updateStatusText(Program.DATABASE_CONNECTION.getConnectionStatusMessage());
 		}
         dc.updateConnectionProgress(this.progress);
         dc.setProgressStyle(this.style);
@@ -97,7 +100,7 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     }
 
     private void error(String msg){
-        this.setProgress(1);
+		this.setProgress(1);
         this.style = STYLE_ERROR;
 		this.dc.setConsoleText(msg);
     }

@@ -1,7 +1,7 @@
 package com.kaylerrenslow.mysqlDatabaseTool.main;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.window.FXStageWrapper;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.fxControls.lib.window.IFXWindow;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.FXStageWrapper;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;

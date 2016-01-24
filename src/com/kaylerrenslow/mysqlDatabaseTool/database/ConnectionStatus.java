@@ -30,10 +30,10 @@ public enum ConnectionStatus{
 	NOT_CONNECTED(Lang.CONN_STATUS_NOT_CONNECTED),
 
 	/**Query is about to begin. No extra data is passed with this status.*/
-	BEGIN_QUERY(Lang.CONN_STATUS_BEGIN_QUERY),
+	QUERY_BEGIN(Lang.CONN_STATUS_BEGIN_QUERY),
 
 	/**Query ended successfully. The extra data is an instance of java.sql.ResultSet*/
-	END_QUERY(Lang.CONN_STATUS_END_QUERY),
+	QUERY_END(Lang.CONN_STATUS_END_QUERY),
 
 	/**Query failed. The extra data is a string with the query fail message*/
 	QUERY_FAIL(Lang.CONN_STATUS_QUERY_ERROR);
@@ -45,7 +45,7 @@ public enum ConnectionStatus{
 	}
 
 	public boolean isQueryStatus(){
-		return this == BEGIN_QUERY || this == END_QUERY || this == QUERY_FAIL;
+		return this == QUERY_BEGIN || this == QUERY_END || this == QUERY_FAIL;
 	}
 
 }

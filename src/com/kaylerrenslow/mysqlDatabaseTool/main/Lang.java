@@ -72,5 +72,5 @@ public class Lang {
 
     /*End constants for context menu strings*/
 
-	public static final String DB_COL_EDITOR_MSG_NOT_SUPPORTED = "Editor incompatible with data type.";
+	public static final String DB_COL_EDITOR_MSG_NOT_SUPPORTED = "Editor '%s' incompatible with data type.";
 }
