@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editor;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors;
 
 /**
  * @author Kayler

@@ -1,6 +1,7 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editorWindow;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editor.EditableControl;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors.DBColumnEditors;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors.EditableControl;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -54,6 +55,9 @@ public class DBColumnDataEditorPanel extends HBox{
 		cb_editors.getSelectionModel().select(0);
 	}
 
+	/**Set the editor to a new data editor. The editor won't get added when the new editor doesn't support the data type of the current data in the current editor<br>
+	 * @return true if the editor was added, false if it wasn't.
+	 * */
 	public boolean setDataEditor(DBColumnEditors editor){
 		EditableControl editorInstance = null;
 		try{

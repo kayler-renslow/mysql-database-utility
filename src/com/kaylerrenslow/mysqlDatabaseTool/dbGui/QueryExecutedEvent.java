@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
+package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;

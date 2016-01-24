@@ -1,5 +1,6 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editorWindow;
 
+import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors.DBColumnEditors;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ChoiceBox;

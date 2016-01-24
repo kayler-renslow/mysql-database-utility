@@ -1,7 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db;
-
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editor.EC_DatePicker;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editor.EC_TextArea;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors;
 
 /**
  * @author Kayler

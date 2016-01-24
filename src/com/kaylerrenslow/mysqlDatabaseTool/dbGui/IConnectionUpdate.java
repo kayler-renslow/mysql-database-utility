@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade;
+package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
 /**
  * @author Kayler

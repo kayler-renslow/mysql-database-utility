@@ -1,6 +1,5 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editor;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.DBColumnEditors;
 import javafx.scene.control.TextArea;
 
 /**

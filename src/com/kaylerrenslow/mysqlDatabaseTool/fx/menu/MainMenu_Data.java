@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.menu;
 
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuItem;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuUtil;
@@ -25,9 +25,9 @@ public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuE
 
     @Override
     public void handle(int index, ActionEvent event) {
-        if(index == menuNewEntry.getInsertionIndex()){
+        if(menuNewEntry.matchesIndex(index)){
             qc.addEmptyRow();
-        }else if(index == menuSyncData.getInsertionIndex()){
+        }else if(menuSyncData.matchesIndex(index)){
             System.out.println("MainMenu_Data>> sync data pressed");
         }else{
             return;

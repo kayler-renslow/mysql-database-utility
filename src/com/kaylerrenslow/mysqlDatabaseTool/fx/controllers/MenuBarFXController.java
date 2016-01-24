@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.controllers;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.MainMenu_Data;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.menu.MainMenu_Data;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 

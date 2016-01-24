@@ -3,15 +3,14 @@ package com.kaylerrenslow.mysqlDatabaseTool.database;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.ConnectionException;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlConnection;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryFailedException;
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.IConnectionUpdate;
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.IQueryExecuteEvent;
+import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IConnectionUpdate;
+import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IQueryExecuteEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 
 /**
  * @author Kayler
@@ -115,7 +114,7 @@ public class DatabaseConnection{
 			connectionUpdate(Lang.CONN_STATUS_NOT_CONNECTED_LONG, Lang.NOTIF_BODY_NOT_CONNECTED, ConnectionStatus.NOT_CONNECTED);
 			return;
 		}
-		g();
+		printAllTableNames();
 		try{
 			connectionUpdate(Lang.CONN_STATUS_BEGIN_QUERY_LONG + this.sql, null, ConnectionStatus.QUERY_BEGIN);
 			ResultSet rs = conn.query(this.sql);
@@ -128,22 +127,18 @@ public class DatabaseConnection{
 	private void connectionUpdate(String msg, Object data, ConnectionStatus newStatus) {
 		this.status = newStatus;
 		if (this.conUpdate == null){
-			System.err.println("WARNING: connectionUpdate is not set for the DatabaseConnection");
+			System.out.println("DatabaseConnection.connectionUpdate was triggered, but no connection update was set.");
 			return;
 		}
 		this.conUpdate.connectionUpdate(msg, data);
 	}
 
-	public void g(){
+	public void printAllTableNames(){
 		try{
 			DatabaseMetaData dmd = this.conn.getDBMetadata();
-			ResultSet schm = dmd.getSchemas();
-
-			ResultSetMetaData rsmd = schm.getMetaData();
-			for(int i = 1; i <= rsmd.getColumnCount(); i++){
-				while(schm.next()){
-					System.out.println(schm.getString(i));
-				}
+			ResultSet rs = dmd.getTables(null, null, "%", null);
+			while (rs.next()) {
+				System.out.println(rs.getString(3));
 			}
 		}catch(Exception e){
 			e.printStackTrace();

@@ -1,9 +1,10 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.controllers;
 
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.DBTask;
+import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent.ConnectionGUIAction;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent.LocatePropFileAction;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
+import com.kaylerrenslow.mysqlDatabaseTool.main.Util;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
@@ -16,6 +17,9 @@ import java.io.File;
  * Created on 11/6/15.
  */
 public class DatabaseFXController {
+	private static final int CONSOLE_MAX_LINE_LENGTH = 35;
+
+
 	private DBConnectionFXController connControl;
 	private Button btnLocateProperties;
     private Button btnDisconnect;
@@ -106,12 +110,9 @@ public class DatabaseFXController {
 
     /**Sets the console text*/
     public void setConsoleText(String text){
-        this.taConsole.setText((text == null ? "" : text));
+		String txt = Util.addLinebreaks(text == null ? "" : text, CONSOLE_MAX_LINE_LENGTH);
+        this.taConsole.setText(txt);
     }
 
-    /**Returns the console text*/
-    public String getConsoleText(){
-        return this.taConsole.getText();
-    }
 
 }

@@ -22,4 +22,9 @@ public class FXMenuItem extends MenuItem {
         return this.insertionIndex;
     }
 
+	/**Returns true if index is the same as this instance's insertion index*/
+	public boolean matchesIndex(int index){
+		return this.insertionIndex == index;
+	}
+
 }

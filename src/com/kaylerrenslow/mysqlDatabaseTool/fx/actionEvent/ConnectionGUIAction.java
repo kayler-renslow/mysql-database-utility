@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent;
 
-import com.kaylerrenslow.mysqlDatabaseTool.dbGuiFacade.Task;
+import com.kaylerrenslow.mysqlDatabaseTool.dbGui.Task;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DatabaseFXController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

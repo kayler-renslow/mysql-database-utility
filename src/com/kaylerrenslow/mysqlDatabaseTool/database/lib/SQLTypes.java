@@ -9,13 +9,18 @@ import java.sql.JDBCType;
 public class SQLTypes{
 
 	/**Converts java.sql.Types integer value into a String representation*/
-	public static String convert(int type){
-		try{
-			return JDBCType.valueOf(type).getName();
-		}catch (Exception e){
-			return "?";
-		}
+	public static String convertToString(int type){
+		JDBCType t = convertToType(type);
+		return t == null ? "?" : t.getName();
 
 	}
 
+	/**Converts java.sql.Types integer value into JDBC enum value. Will return null if the type is undefined*/
+	public static JDBCType convertToType(int type) {
+		try{
+			return JDBCType.valueOf(type);
+		}catch (Exception e){
+			return null;
+		}
+	}
 }
