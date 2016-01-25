@@ -223,6 +223,7 @@ public class DatabaseConnection{
 				return;
 			}
 		}
+		System.out.println("----Queries complete-----");
 		this.dBTable.clearEdited();
 	}
 

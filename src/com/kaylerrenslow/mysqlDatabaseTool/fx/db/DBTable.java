@@ -103,7 +103,7 @@ public class DBTable implements IDBTableData{
 	/**Removes the currently selected row.*/
 	public void removeSelectedRow() {
 		if(this.getSelectedRowIndex() > -1){
-			updateData(DBTableEdit.EditType.DELETION, this.tv.getItems().size() - 1, null, getSelectedRowData());
+			updateData(DBTableEdit.EditType.DELETION, this.getSelectedRowIndex(), null, getSelectedRowData());
 		}
 	}
 
@@ -195,6 +195,13 @@ public class DBTable implements IDBTableData{
 			}
 
 			i++;
+		}
+		if(type == DBTableEdit.EditType.DELETION){
+			for(i = 0; i < this.rowsEdited.size(); i++){
+				if(this.rowsEdited.get(i).rowIndex() > rowIndex){
+					this.rowsEdited.get(i).decrementRowIndex(1); //since an element is getting removed from the table, the indexes need to be shifted -1 to realign their indexes
+				}
+			}
 		}
 		if(discardNewEdit){
 			return;

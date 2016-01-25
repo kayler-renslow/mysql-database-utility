@@ -14,7 +14,7 @@ public class DBTableEdit{
 	private final EditType type;
 	private final ObservableList oldRowData;
 	private ObservableList newRowData;
-	private final int rowIndex;
+	private int rowIndex;
 
 	private static int NEXT_ID = 0;
 
@@ -29,6 +29,10 @@ public class DBTableEdit{
 
 	void setNewRowData(ObservableList newRowData){
 		this.newRowData = newRowData;
+	}
+
+	void decrementRowIndex(int amount) {
+		this.rowIndex -= amount;
 	}
 
 	public ObservableList oldRowData(){
@@ -46,6 +50,7 @@ public class DBTableEdit{
 	public int rowIndex() {
 		return rowIndex;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
