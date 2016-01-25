@@ -16,7 +16,10 @@ public class DBTask extends Task{
         /**Denotes this task is used to disconnect from a database*/
         DISCONNECT,
 
-        /**Denotes this task is used to query a database. The query must be pre-set.*/
+		/**Denotes this task is used to update the server's database with the data in the table*/
+		SYNCHRONIZE_DATA,
+
+		/**Denotes this task is used to query a database. The query must be pre-set.*/
         RUN_QUERY
     }
 
@@ -27,6 +30,7 @@ public class DBTask extends Task{
     public DBTask(DBConnectionUpdate connUpdate, TaskType type) {
 		this.connUpdate = connUpdate;
         this.taskType = type;
+		this.valueProperty().addListener(connUpdate);
     }
 
     @Override
@@ -36,6 +40,7 @@ public class DBTask extends Task{
             case CONNECT: Program.DATABASE_CONNECTION.connect(); break;
             case DISCONNECT: Program.DATABASE_CONNECTION.disconnect(); break;
             case RUN_QUERY: Program.DATABASE_CONNECTION.runQuery(); break;
+			case SYNCHRONIZE_DATA: Program.DATABASE_CONNECTION.synchronize(); break;
         }
 		return null; //return null so updateValue() won't call the value change listener
     }

@@ -2,6 +2,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent;
 
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.Task;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DatabaseFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -13,12 +14,14 @@ import javafx.event.EventHandler;
  */
 public class ConnectionGUIAction implements EventHandler<ActionEvent> {
     private DatabaseFXController dc;
+    private QueryFXController qc;
 
     /**True if this action represents the connect button being pressed, otherwise if the disconnect button was pressed*/
     private boolean connecting;
 
-    public ConnectionGUIAction(DatabaseFXController dc, boolean connecting) {
+    public ConnectionGUIAction(DatabaseFXController dc, QueryFXController qc, boolean connecting) {
         this.dc = dc;
+        this.qc = qc;
         this.connecting = connecting;
     }
 
@@ -38,5 +41,6 @@ public class ConnectionGUIAction implements EventHandler<ActionEvent> {
 
     private void disconnectButtonPress() {
         Task.runTask(this.dc.getDisconnectTask());
+		this.qc.clearTable();
     }
 }

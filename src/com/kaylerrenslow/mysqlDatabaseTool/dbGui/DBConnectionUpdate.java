@@ -53,6 +53,9 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 			case QUERY_END:
 				setProgress(1.0);
 				break;
+			case QUERY_END_UPDATE:
+				setProgress(1);
+				break;
 			case QUERY_FAIL:
 				this.dc.setConsoleText(msg);
 				setProgress(1);

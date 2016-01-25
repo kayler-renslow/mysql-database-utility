@@ -42,8 +42,8 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
     public static void createNewWindow(IFXWindow window){
         Stage stage = new Stage();
         stage.setScene(new Scene(window.getRoot()));
-        stage.setWidth(window.getInitWidth());
-        stage.setHeight(window.getInitHeight());
+        window.getRoot().setPrefWidth(window.getInitWidth());
+		window.getRoot().setPrefHeight(window.getInitHeight());
         subWindows.add(new FXStageWrapper(stage, window));
         stage.setTitle(window.getTitle());
         stage.show();
@@ -59,5 +59,17 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
 				}
 			}
 		}
+	}
+
+	/**Closes the window.
+	 * @return true if the window was closed, false if it wasn't.*/
+	public static boolean closeWindow(IFXWindow window) {
+		for(FXStageWrapper s : subWindows){
+			if(s.getWindow() == window){
+				s.getStage().close();
+				return true;
+			}
+		}
+		return false;
 	}
 }

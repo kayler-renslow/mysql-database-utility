@@ -1,6 +1,8 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.db;
 
 import javafx.collections.ObservableList;
+
+import java.util.List;
 
 /**
  * @author Kayler
@@ -14,7 +16,7 @@ public interface IDBTableData{
 	String[] getColumnTypes();
 
 	/**Updates the data in the table at rowIndex with the new data*/
-	void updateData(int rowIndex, ObservableList newData);
+	void updateData(DBTableEdit.EditType type, int rowIndex, ObservableList newData, ObservableList oldData);
 
 	/**Get one row of data*/
 	ObservableList getData(int rowIndex);
@@ -23,4 +25,10 @@ public interface IDBTableData{
 	 * @return true if there is data, false otherwise
 	 * */
 	boolean hasColumns();
+
+	/**Gets a list of the edited rows.*/
+	List<DBTableEdit> getEditedData();
+
+	/**Marks all the edited rows as unedited*/
+	void clearEdited();
 }

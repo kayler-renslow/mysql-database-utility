@@ -4,23 +4,32 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuItem;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.IFXMenuEventHandle;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.window.AllTablesWindow;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DataSynchronizeWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
+import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
+import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.control.MenuItem;
 
 /**
  * @author Kayler
  * Created on 12/7/15.
  */
-public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuEventHandle {
+public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuEventHandle, EventHandler<Event> {
 
     private QueryFXController qc;
     private FXMenuItem menuNewEntry = new FXMenuItem(Lang.MENUB_DATA_NEW_ENTRY);
     private FXMenuItem menuSyncData = new FXMenuItem(Lang.MENUB_DATA_SYNC_DATA);
+    private FXMenuItem menuListTables = new FXMenuItem(Lang.MENUB_DATA_LIST_TABLES);
 
     public MainMenu_Data(QueryFXController qc) {
         super(Lang.MENUB_DATA_TITLE);
-        FXMenuUtil.addItems(this, this, menuNewEntry, menuSyncData);
+        FXMenuUtil.addItems(this, this, menuNewEntry, menuSyncData, menuListTables);
         this.qc = qc;
+		this.setOnShowing(this);
     }
 
     @Override
@@ -28,9 +37,17 @@ public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuE
         if(menuNewEntry.matchesIndex(index)){
             qc.addEmptyRow();
         }else if(menuSyncData.matchesIndex(index)){
-            System.out.println("MainMenu_Data>> sync data pressed");
-        }else{
-            return;
+			WebsiteDatabaseTool.createNewWindow(new DataSynchronizeWindow(this.qc));
+        }else if(menuListTables.matchesIndex(index)){
+            WebsiteDatabaseTool.createNewWindow(new AllTablesWindow());
         }
     }
+
+	@Override
+	public void handle(Event event) {
+		for(MenuItem mi : this.getItems()){
+			mi.disableProperty().set(!Program.DATABASE_CONNECTION.isConnected());
+		}
+		this.menuNewEntry.disableProperty().set(!qc.canAddEmptyRow());
+	}
 }

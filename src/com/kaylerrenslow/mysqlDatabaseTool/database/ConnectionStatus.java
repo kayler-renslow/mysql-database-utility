@@ -35,6 +35,9 @@ public enum ConnectionStatus{
 	/**Query ended successfully. The extra data is an instance of java.sql.ResultSet*/
 	QUERY_END(Lang.CONN_STATUS_END_QUERY),
 
+	/**Query ended successfully and was an update query. There is no extra data*/
+	QUERY_END_UPDATE(Lang.CONN_STATUS_END_QUERY),
+
 	/**Query failed. The extra data is a string with the query fail message*/
 	QUERY_FAIL(Lang.CONN_STATUS_QUERY_ERROR);
 
@@ -45,7 +48,7 @@ public enum ConnectionStatus{
 	}
 
 	public boolean isQueryStatus(){
-		return this == QUERY_BEGIN || this == QUERY_END || this == QUERY_FAIL;
+		return this == QUERY_BEGIN || this == QUERY_END || this == QUERY_FAIL || this == QUERY_END_UPDATE;
 	}
 
 }

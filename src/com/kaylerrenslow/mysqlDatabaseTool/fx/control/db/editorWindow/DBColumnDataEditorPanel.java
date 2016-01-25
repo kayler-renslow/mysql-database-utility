@@ -55,6 +55,11 @@ public class DBColumnDataEditorPanel extends HBox{
 		cb_editors.getSelectionModel().select(0);
 	}
 
+	/**Gets the editor's data*/
+	public String getEditorData(){
+		return this.dataEditor.getData();
+	}
+
 	/**Set the editor to a new data editor. The editor won't get added when the new editor doesn't support the data type of the current data in the current editor<br>
 	 * @return true if the editor was added, false if it wasn't.
 	 * */

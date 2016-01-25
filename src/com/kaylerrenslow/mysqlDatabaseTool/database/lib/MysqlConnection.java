@@ -115,18 +115,34 @@ public class MysqlConnection{
 	}
 
 	/** Runs a MySQL query.
-	 * @param sql sql String to execute
+	 * @param sql sql String to execute (can not be updating an values in the database)
 	 * @return ResultSet containing the results. Returns null if the query failed.
 	 * @throws IllegalArgumentException when a connection has not been set (should run connect())
 	 * @throws QueryFailedException when the query failed. The reason for the fail will be inside the exception's message
 	 */
 	public ResultSet query(String sql) throws QueryFailedException{
+		return query(sql, false);
+	}
+
+	/** Runs a MySQL query.
+	 * @param sql sql String to execute
+	 * @param updating true if the query is doing any updating to the database, false if it is just a selection
+	 * @return ResultSet containing the results. Returns null if the query failed.
+	 * @throws IllegalArgumentException when a connection has not been set (should run connect())
+	 * @throws QueryFailedException when the query failed. The reason for the fail will be inside the exception's message
+	 */
+	public ResultSet query(String sql, boolean updating) throws QueryFailedException{
 		if(this.conn == null){
 			throw new IllegalStateException("Can not run a query when a connection isn't set.");
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = null;
+			if(updating){
+				stmt.executeUpdate(sql);
+			}else{
+				rs = stmt.executeQuery(sql);
+			}
 			printToStream("Query was successful");
 			return rs;
 		} catch (SQLException e) {

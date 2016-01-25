@@ -15,7 +15,6 @@ import javafx.scene.control.Menu;
 public class DBEditorHeaderMenu extends Menu implements IFXMenuEventHandle{
 
 	private FXMenuItem save = new FXMenuItem(Lang.DB_EDITOR_MENU_DATA_SAVE);
-	private FXMenuItem close = new FXMenuItem(Lang.DB_EDITOR_MENU_DATA_CLOSE);
 	private DBDataEditorWindow window;
 
 	public DBEditorHeaderMenu(DBDataEditorWindow window) {
@@ -25,15 +24,13 @@ public class DBEditorHeaderMenu extends Menu implements IFXMenuEventHandle{
 	}
 
 	private void initialize() {
-		FXMenuUtil.addItems(this, this, save, close);
+		FXMenuUtil.addItems(this, this, save);
 	}
 
 	@Override
 	public void handle(int index, ActionEvent event) {
 		if(save.matchesIndex(index)){
 			window.save();
-		}else{
-			window.close();
 		}
 	}
 }

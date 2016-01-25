@@ -60,22 +60,23 @@ public class Lang {
     public static final String PROGRAM_WINDOW_TITLE = "Website Database Tool";
 
     /*Begin constants for menu bar strings*/
+
     public static final String MENUB_DATA_TITLE = "Data";
     public static final String MENUB_DATA_NEW_ENTRY = "New Entry";
-
     public static final String MENUB_DATA_SYNC_DATA = "Sync data to Database";
+	public static final String MENUB_DATA_LIST_TABLES = "List All Tables";
+
     /*End constants for menu bar strings*/
 
     /*Begin constants for context menu strings*/
+	public static final String CONTEXT_MENU_DBTV_EDIT = "Edit";
 
-    public static final String CONTEXT_MENU_DBTV_EDIT = "Edit";
+	public static final String CONTEXT_MENU_DBTV_REMOVE_ROW = "Remove Row";
+
 
     /*End constants for context menu strings*/
-
 	public static final String DB_COL_EDITOR_MSG_NOT_SUPPORTED = "Editor '%s' incompatible with data type.";
-
-
 	public static final String DB_EDITOR_MENU_TITLE = "Data";
 	public static final String DB_EDITOR_MENU_DATA_SAVE = "Save";
-	public static final String DB_EDITOR_MENU_DATA_CLOSE = "Close Window";
+	public static final String CONTEXT_MENU_DBTV_DUPLICATE = "Duplicate";
 }

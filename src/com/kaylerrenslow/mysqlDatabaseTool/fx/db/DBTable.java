@@ -1,4 +1,4 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.db;
 
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.SQLTypes;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.contextMenu.CM_DBTableView;
@@ -15,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Kayler
@@ -22,15 +23,14 @@ import java.util.Iterator;
  *         Created on 12/9/15.
  */
 public class DBTable implements IDBTableData{
-	public final TableView<ObservableList> tv;
+	private final TableView<ObservableList> tv;
 	private ContextMenu cm;
-	private boolean error = false;
 	private String[] columnTypes;
 	private JDBCType[] columnJDBCTypes;
 	private String[] columnNames;
 
 	/**The table row data that was edited before the last database synchronization*/
-	private ArrayList<Integer> rowsEdited = new ArrayList<>();
+	private ArrayList<DBTableEdit> rowsEdited = new ArrayList<>();
 
 	public DBTable(TableView tv) {
 		this.tv = tv;
@@ -42,11 +42,14 @@ public class DBTable implements IDBTableData{
 		this.tv.setContextMenu(cm);
 	}
 
+	public void clearTable(){
+		this.tv.getItems().clear();
+	}
+
 	/**
 	 * Clears the table and then adds the query data to the table.
 	 */
 	public void addQueryDataToTable(ResultSet rs) throws SQLException {
-		error = false;
 		tv.getColumns().clear();
 		ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -87,19 +90,46 @@ public class DBTable implements IDBTableData{
 		}
 	}
 
-	/**Mark a table row's data at index as edited. When database synchronization happens, this edited data will be used to update the database.*/
-	private void markAsEdited(int index){
-		if(!this.rowsEdited.contains(index)){
-			this.rowsEdited.add(index);
+	/**Get the current selected row index*/
+	public int getSelectedRowIndex(){
+		return this.tv.getSelectionModel().getSelectedIndex();
+	}
+
+	/**Get the current selected row data*/
+	public ObservableList getSelectedRowData(){
+		return this.tv.getSelectionModel().getSelectedItem();
+	}
+
+	/**Removes the currently selected row.*/
+	public void removeSelectedRow() {
+		if(this.getSelectedRowIndex() > -1){
+			updateData(DBTableEdit.EditType.DELETION, this.tv.getItems().size() - 1, null, getSelectedRowData());
 		}
 	}
 
-	/**Gets an iterator for the edited rows.*/
-	public Iterator<ObservableList> getEditedDataIterator(){
-		return new EditedDataIterator(this);
+	/**Duplicates the row at index selectedRowIndex and appends it to the bottom of the table*/
+	public void duplicateRow(int selectedRowIndex) {
+		if(this.getSelectedRowIndex() > -1){
+			ObservableList old = this.tv.getItems().get(selectedRowIndex);
+			ObservableList neww =FXCollections.observableArrayList(new String[old.size()]);
+			FXCollections.copy(neww, old);
+			updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), neww, old);
+		}
 	}
 
-	/**Marks all the edited rows as unedited*/
+	/**Mark a table row's data at index as edited. When database synchronization happens, this edited data will be used to update the database.*/
+	private void markAsEdited(DBTableEdit.EditType type, int index, ObservableList newData, ObservableList oldData){
+		DBTableEdit edit = new DBTableEdit(type, index, newData, oldData);
+		this.rowsEdited.add(edit);
+	}
+
+
+	@Override
+	public List<DBTableEdit> getEditedData(){
+		return (List<DBTableEdit>)this.rowsEdited.clone();
+	}
+
+	@Override
 	public void clearEdited(){
 		this.rowsEdited.clear();
 	}
@@ -114,18 +144,62 @@ public class DBTable implements IDBTableData{
 
 		String[] data = new String[this.tv.getColumns().size()];
 		for (int i = 0; i < this.tv.getColumns().size(); i++){
-			data[i] = "newData";
+			data[i] = "new data";
 		}
 		ObservableList<String> row = FXCollections.observableArrayList();
 		row.addAll(data);
-		this.tv.getItems().add(row);
+		updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), row, null);
 	}
 
 	@Override
-	public void updateData(int rowIndex, ObservableList newData) {
-		this.tv.getItems().set(rowIndex, newData);
-		this.markAsEdited(rowIndex);
+	public void updateData(DBTableEdit.EditType type, int rowIndex, ObservableList newData, ObservableList oldData) {
+		if(type == DBTableEdit.EditType.ADDITION){
+			this.tv.getItems().add(newData);
+		}else if (type == DBTableEdit.EditType.DELETION){
+			this.tv.getItems().remove(rowIndex);
+		}else{
+			this.tv.getItems().set(rowIndex, newData);
+		}
+		int i = 0;
+		DBTableEdit edit;
+		boolean discardNewEdit = false;
+		while(i < this.rowsEdited.size()){
+			edit = this.rowsEdited.get(i);
+			if(edit.rowIndex() != rowIndex){
+				i++;
+				continue;
+			}
+			if(edit.type() == DBTableEdit.EditType.ADDITION){
+				if(type == DBTableEdit.EditType.UPDATE){
+					edit.setNewRowData(newData);
+					discardNewEdit = true;
+				}else if(type == DBTableEdit.EditType.DELETION){
+					this.rowsEdited.remove(edit);
+					discardNewEdit = true;
+					continue;
+				}
+			}else if(edit.type() == DBTableEdit.EditType.UPDATE){
+				if(type == DBTableEdit.EditType.UPDATE){
+					edit.setNewRowData(newData);
+					discardNewEdit = true;
+					continue;
+				}else if(type == DBTableEdit.EditType.DELETION){
+					this.rowsEdited.remove(edit);
+					continue;
+				}
+			}else if(edit.type() == DBTableEdit.EditType.DELETION){
+				if(type == DBTableEdit.EditType.ADDITION){
+					this.rowsEdited.remove(edit);
+					continue;
+				}
+			}
 
+			i++;
+		}
+		if(discardNewEdit){
+			return;
+		}
+		this.markAsEdited(type, rowIndex, newData, oldData);
 	}
 
 	@Override
@@ -149,7 +223,7 @@ public class DBTable implements IDBTableData{
 	}
 
 
-	private class EditedDataIterator implements Iterator<ObservableList>{
+	private class EditedDataIterator implements Iterator<DBTableEdit>{
 
 		private final DBTable table;
 		private int cursor = 0;
@@ -164,8 +238,8 @@ public class DBTable implements IDBTableData{
 		}
 
 		@Override
-		public ObservableList next() {
-			return this.table.getData(cursor++);
+		public DBTableEdit next() {
+			return this.table.rowsEdited.get(cursor++);
 		}
 	}
 

@@ -3,7 +3,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.controllers;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.QueryExecutedEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.FXUtil;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.DBTable;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.scene.control.Button;
@@ -29,6 +29,7 @@ public class QueryFXController{
 	public QueryExecutedEvent qee = new QueryExecutedEvent(this);
 
 	private DBTask taskQuery;
+	private DBTask taskSync;
 
 	public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, TableView queryResultTable) {
 		this.connControl = connControl;
@@ -40,6 +41,7 @@ public class QueryFXController{
 	public void initialize() {
 		this.btnExecute.setOnAction(qee);
 		Program.DATABASE_CONNECTION.setQueryExecutedEvent(qee);
+		Program.DATABASE_CONNECTION.setDBTable(dbTable);
 		FXUtil.setEmptyContextMenu(this.tfTextQuery);
 
 		setTasks();
@@ -47,9 +49,7 @@ public class QueryFXController{
 
 	private void setTasks() {
 		taskQuery = new DBTask(this.connControl.getConnectionUpdate(), DBTask.TaskType.RUN_QUERY);
-
-		taskQuery.valueProperty().addListener(this.connControl.getConnectionUpdate());
-		/**Task used for connection to the database*/
+		taskSync = new DBTask(this.connControl.getConnectionUpdate(), DBTask.TaskType.SYNCHRONIZE_DATA);
 	}
 
 	/**
@@ -64,6 +64,10 @@ public class QueryFXController{
 	 */
 	public String getQueryText() {
 		return tfTextQuery.getText();
+	}
+
+	public DBTask getDBSynchronizeTask(){
+		return this.taskSync;
 	}
 
 	/**
@@ -96,5 +100,15 @@ public class QueryFXController{
 		}else {
 			this.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NOT_CONNECTED);
 		}
+	}
+
+	/**Returns true if an empty row can be added to the table, false otherwise*/
+	public boolean canAddEmptyRow(){
+		return Program.DATABASE_CONNECTION.isConnected() && this.dbTable.hasColumns();
+	}
+
+	/**Clears the entire table*/
+	public void clearTable() {
+		this.dbTable.clearTable();
 	}
 }
