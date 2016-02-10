@@ -49,19 +49,15 @@ public class QueryFXController{
 		setConstructorListeners(cbDmlDdl);
 	}
 
-	private void setConstructorListeners(ChoiceBox cbDmlDdl) {
-		cbDmlDdl.getItems().addAll(QueryType.DDL, QueryType.DML);
-		cbDmlDdl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener(){
+	private void setConstructorListeners(ChoiceBox<QueryType> cbDmlDdl) {
+		cbDmlDdl.getItems().addAll(QueryType.values());
+		cbDmlDdl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<QueryType>(){
 			@Override
-			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-				if(cbDmlDdl.getSelectionModel().getSelectedItem() == QueryType.DDL){
-					qee.updateQueryType(QueryType.DDL);
-				}else{
-					qee.updateQueryType(QueryType.DML);
-				}
+			public void changed(ObservableValue observable, QueryType oldValue, QueryType newValue) {
+				qee.updateQueryType((QueryType) cbDmlDdl.getSelectionModel().getSelectedItem());
 			}
 		});
-		cbDmlDdl.getSelectionModel().select(QueryType.DDL);
+		cbDmlDdl.getSelectionModel().select(QueryType.SELECTION);
 	}
 
 	public void initialize() {

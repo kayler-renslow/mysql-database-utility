@@ -117,7 +117,7 @@ public class ViewEditsWindow extends VBox implements IFXWindow{
 	}
 
 	private void removeFirstChild(){
-		if(this.getChildren().size() > 0){
+		if(this.vbEdits.getChildren().size() > 0){
 			this.vbEdits.getChildren().remove(0);
 		}
 	}

@@ -1,11 +1,16 @@
 package com.kaylerrenslow.mysqlDatabaseTool.database.lib;
 
 /**
+ * This enum is used to determine a type of a query being executed.
  * @author Kayler
  * Created on 02/09/2016.
  */
 public enum QueryType{
-	DML("DML"), DDL("DDL");
+	/**Used when SELECT, INSERT, etc are used*/
+	SELECTION("SELECTION"),
+
+	/**Used when ALTER, SELECTION, etc are used*/
+	UPDATE("UPDATE");
 
 	final String text;
 	QueryType(String text) {

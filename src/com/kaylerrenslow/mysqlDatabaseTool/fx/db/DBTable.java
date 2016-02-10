@@ -50,6 +50,9 @@ public class DBTable implements IDBTableData{
 	 */
 	public void addQueryDataToTable(ResultSet rs) throws SQLException {
 		tv.getColumns().clear();
+		if(rs == null){
+			return;
+		}
 		ResultSetMetaData rsmd = rs.getMetaData();
 
 		//add all the table columns

@@ -122,7 +122,7 @@ public class MysqlConnection{
 	 * @throws QueryFailedException when the query failed. The reason for the fail will be inside the exception's message
 	 */
 	public ResultSet query(String sql, QueryType qt) throws QueryFailedException{
-		return query(sql, qt == QueryType.DML);
+		return query(sql, qt == QueryType.UPDATE);
 	}
 
 	/** Runs a MySQL query.

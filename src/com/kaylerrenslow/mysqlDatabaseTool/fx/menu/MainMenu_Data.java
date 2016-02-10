@@ -52,6 +52,7 @@ public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuE
 		for(MenuItem mi : this.getItems()){
 			mi.disableProperty().set(!Program.DATABASE_CONNECTION.isConnected());
 		}
+		this.menuSyncData.disableProperty().set(!qc.canAddEmptyRow());
 		this.menuNewEntry.disableProperty().set(!qc.canAddEmptyRow());
 	}
 }
