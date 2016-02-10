@@ -116,12 +116,13 @@ public class MysqlConnection{
 
 	/** Runs a MySQL query.
 	 * @param sql sql String to execute (can not be updating an values in the database)
+	 * @param qt type of the query
 	 * @return ResultSet containing the results. Returns null if the query failed.
 	 * @throws IllegalArgumentException when a connection has not been set (should run connect())
 	 * @throws QueryFailedException when the query failed. The reason for the fail will be inside the exception's message
 	 */
-	public ResultSet query(String sql) throws QueryFailedException{
-		return query(sql, false);
+	public ResultSet query(String sql, QueryType qt) throws QueryFailedException{
+		return query(sql, qt == QueryType.DML);
 	}
 
 	/** Runs a MySQL query.
@@ -138,6 +139,7 @@ public class MysqlConnection{
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = null;
+
 			if(updating){
 				stmt.executeUpdate(sql);
 			}else{

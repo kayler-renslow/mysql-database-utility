@@ -1,6 +1,7 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.window;
 
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
+import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,6 +43,6 @@ public class AllTablesWindow extends ListView implements IFXWindow{
 
 	@Override
 	public String getTitle() {
-		return "All SQL tables";
+		return Lang.WINDOW_ALL_TABLES;
 	}
 }

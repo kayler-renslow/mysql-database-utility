@@ -6,6 +6,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.IFXMenuEventHandl
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.window.AllTablesWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DataSynchronizeWindow;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.window.ViewEditsWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
@@ -24,10 +25,11 @@ public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuE
     private FXMenuItem menuNewEntry = new FXMenuItem(Lang.MENUB_DATA_NEW_ENTRY);
     private FXMenuItem menuSyncData = new FXMenuItem(Lang.MENUB_DATA_SYNC_DATA);
     private FXMenuItem menuListTables = new FXMenuItem(Lang.MENUB_DATA_LIST_TABLES);
+	private FXMenuItem menuViewEdits = new FXMenuItem(Lang.MENUB_DATA_VIEW_EDITS);
 
     public MainMenu_Data(QueryFXController qc) {
         super(Lang.MENUB_DATA_TITLE);
-        FXMenuUtil.addItems(this, this, menuNewEntry, menuSyncData, menuListTables);
+        FXMenuUtil.addItems(this, this, menuNewEntry, menuSyncData, menuListTables, menuViewEdits);
         this.qc = qc;
 		this.setOnShowing(this);
     }
@@ -40,7 +42,9 @@ public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuE
 			WebsiteDatabaseTool.createNewWindow(new DataSynchronizeWindow(this.qc));
         }else if(menuListTables.matchesIndex(index)){
             WebsiteDatabaseTool.createNewWindow(new AllTablesWindow());
-        }
+        }else if(menuViewEdits.matchesIndex(index)){
+			WebsiteDatabaseTool.createNewWindow(new ViewEditsWindow(qc));
+		}
     }
 
 	@Override

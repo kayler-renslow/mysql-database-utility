@@ -1,0 +1,5 @@
+-added query type so that the query execution part of the gui can accept either dml or ddl statements
+-added choicebox to determine the type of the query in the query text area
+-added view so that all changes made to the local copy are visible. edits can removed.
+-changed how duplicated and inserting new rows works. it now opens the edit data window and when the save menu option is pressed, it closes the window and appends the data to the table.
+-removed compaction of table edits since all edits can now be viewed and removed. this should remove a number of bugs associated with compaction

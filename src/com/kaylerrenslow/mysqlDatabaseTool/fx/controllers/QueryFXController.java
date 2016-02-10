@@ -1,17 +1,25 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.controllers;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.QueryExecutedEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.FXUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
+import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  * @author Kayler
@@ -25,17 +33,35 @@ public class QueryFXController{
 
 	private TextArea tfTextQuery;
 	private DBTable dbTable;
+
 	private DBConnectionFXController connControl;
 	public QueryExecutedEvent qee = new QueryExecutedEvent(this);
 
 	private DBTask taskQuery;
 	private DBTask taskSync;
 
-	public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, TableView queryResultTable) {
+	public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, ChoiceBox cbDmlDdl, TableView queryResultTable) {
 		this.connControl = connControl;
 		this.tfTextQuery = queryText;
 		this.btnExecute = btnExecute;
 		this.dbTable = new DBTable(queryResultTable);
+
+		setConstructorListeners(cbDmlDdl);
+	}
+
+	private void setConstructorListeners(ChoiceBox cbDmlDdl) {
+		cbDmlDdl.getItems().addAll(QueryType.DDL, QueryType.DML);
+		cbDmlDdl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener(){
+			@Override
+			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+				if(cbDmlDdl.getSelectionModel().getSelectedItem() == QueryType.DDL){
+					qee.updateQueryType(QueryType.DDL);
+				}else{
+					qee.updateQueryType(QueryType.DML);
+				}
+			}
+		});
+		cbDmlDdl.getSelectionModel().select(QueryType.DDL);
 	}
 
 	public void initialize() {
@@ -93,7 +119,7 @@ public class QueryFXController{
 	public void addEmptyRow() {
 		if (Program.DATABASE_CONNECTION.isConnected()){
 			if (this.dbTable.hasColumns()){
-				this.dbTable.addEmptyRow();
+				WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getRowSize(), this.dbTable.getNewRowData(), true));
 			}else{
 				this.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NO_COLUMNS);
 			}
@@ -110,5 +136,13 @@ public class QueryFXController{
 	/**Clears the entire table*/
 	public void clearTable() {
 		this.dbTable.clearTable();
+	}
+
+	public Iterator<DBTableEdit> tableEditIterator(){
+		return this.dbTable.iterator(true);
+	}
+
+	public void removeLatestTableUpdate() {
+		this.dbTable.undoLastEdit();
 	}
 }

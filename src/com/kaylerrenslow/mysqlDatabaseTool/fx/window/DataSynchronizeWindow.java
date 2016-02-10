@@ -3,6 +3,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.window;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
@@ -72,6 +73,6 @@ public class DataSynchronizeWindow extends VBox implements IFXWindow, EventHandl
 
 	@Override
 	public String getTitle() {
-		return "Synchronize the table to the server";
+		return Lang.WINDOW_DATA_SYNC;
 	}
 }

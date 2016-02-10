@@ -1,5 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
  */
 public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<ActionEvent> {
     private QueryFXController qc;
+    private QueryType qt;
 
     public QueryExecutedEvent(QueryFXController controller) {
         this.qc = controller;
@@ -25,8 +27,12 @@ public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<Acti
         runQuery();
     }
 
+    public void updateQueryType(QueryType qt){
+        this.qt = qt;
+    }
+
     private void runQuery(){
-        Program.DATABASE_CONNECTION.prepareQuery(qc.getQueryText());
+        Program.DATABASE_CONNECTION.prepareQuery(qc.getQueryText(), this.qt);
         Task.runTask(this.qc.getQueryTask());
     }
 

@@ -1,10 +1,10 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.contextMenu;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editorWindow.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuItem;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.IFXMenuEventHandle;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
@@ -20,27 +20,24 @@ public class CM_DBTableView extends javafx.scene.control.ContextMenu implements 
 	private FXMenuItem duplicate = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_DUPLICATE);
 	private FXMenuItem removeRow = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_REMOVE_ROW);
 
+    private final DBTable dbTable;
 
-    private final DBTable dbtv;
-
-    public CM_DBTableView(DBTable dbtv){
+    public CM_DBTableView(DBTable dbTable){
         FXMenuUtil.addItems(this, this, edit, duplicate, removeRow);
-        this.dbtv = dbtv;
+        this.dbTable = dbTable;
     }
-
-
 
     @Override
     public void handle(int index, ActionEvent event) {
         if(edit.matchesIndex(index)){
-			if(this.dbtv.getSelectedRowData() == null){
+			if(this.dbTable.getSelectedRowData() == null){
 				return;
 			}
-            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbtv, this.dbtv.getSelectedRowIndex(), this.dbtv.getSelectedRowData()));
+            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getSelectedRowIndex(), this.dbTable.getSelectedRowData()));
         }else if(removeRow.matchesIndex(index)){
-			this.dbtv.removeSelectedRow();
+			this.dbTable.removeSelectedRow();
 		}else if(duplicate.matchesIndex(index)){
-			this.dbtv.duplicateRow(this.dbtv.getSelectedRowIndex());
+			WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getSelectedRowIndex(), this.dbTable.duplicateRow(this.dbTable.getSelectedRowIndex()), true));
 		}
     }
 

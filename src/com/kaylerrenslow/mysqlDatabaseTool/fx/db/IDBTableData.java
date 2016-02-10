@@ -2,7 +2,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.db;
 
 import javafx.collections.ObservableList;
 
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author Kayler
@@ -26,8 +26,8 @@ public interface IDBTableData{
 	 * */
 	boolean hasColumns();
 
-	/**Gets a list of the edited rows.*/
-	List<DBTableEdit> getEditedData();
+	/**Gets an iterator for the edited rows.*/
+	Iterator<DBTableEdit> iterator(boolean reversed);
 
 	/**Marks all the edited rows as unedited*/
 	void clearEdited();

@@ -1,10 +1,12 @@
-package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editorWindow;
+package com.kaylerrenslow.mysqlDatabaseTool.fx.window;
 
+import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editorWindow.DBColumnDataEditorPanel;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors.EC_TextArea;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.IDBTableData;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.menu.DBEditorHeaderMenu;
+import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MenuBar;
@@ -24,15 +26,28 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 	private VBox vb_content = new VBox();
 	private MenuBar menuBar = new MenuBar();
 	private DBColumnDataEditorPanel[] panels;
-
 	private final IDBTableData table;
+
 	private final int rowIndex;
 
+	private final boolean openAsNewDataEditor;
+
 	public DBDataEditorWindow(IDBTableData table, int rowIndex, ObservableList<String> data) {
+		this(table, rowIndex, data, false);
+	}
+
+	/** Creates a new table data editor window
+	 * @param table table the data is being edited on
+	 * @param rowIndex row index that is being edited
+	 * @param data data that is being edited
+	 * @param openAsNewDataEditor true if this window is opening data that doesn't exist in the table just yet. When data is saved in this window, it will notify the table that an addition was created and then close this window.
+	 */
+	public DBDataEditorWindow(IDBTableData table, int rowIndex, ObservableList<String> data, boolean openAsNewDataEditor) {
 		initializeHeaderMenu();
 		this.table = table;
 		this.rowIndex = rowIndex;
 		initializeContent(data);
+		this.openAsNewDataEditor = openAsNewDataEditor;
 	}
 
 	private void initializeHeaderMenu() {
@@ -72,7 +87,12 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 		for (int i = 0; i < this.panels.length; i++){
 			this.newData.set(i, this.panels[i].getEditorData());
 		}
-		this.table.updateData(DBTableEdit.EditType.UPDATE, this.rowIndex, this.newData, this.oldData);
+		if(this.openAsNewDataEditor){
+			this.table.updateData(DBTableEdit.EditType.ADDITION, this.rowIndex, this.newData, this.oldData);
+			WebsiteDatabaseTool.closeWindow(this);
+		}else{
+			this.table.updateData(DBTableEdit.EditType.UPDATE, this.rowIndex, this.newData, this.oldData);
+		}
 	}
 
 

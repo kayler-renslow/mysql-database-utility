@@ -15,7 +15,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Kayler
@@ -108,13 +107,15 @@ public class DBTable implements IDBTableData{
 	}
 
 	/**Duplicates the row at index selectedRowIndex and appends it to the bottom of the table*/
-	public void duplicateRow(int selectedRowIndex) {
-		if(this.getSelectedRowIndex() > -1){
-			ObservableList old = this.tv.getItems().get(selectedRowIndex);
-			ObservableList neww =FXCollections.observableArrayList(new String[old.size()]);
-			FXCollections.copy(neww, old);
-			updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), neww, old);
+	public ObservableList<String> duplicateRow(int selectedRowIndex) {
+		if(this.getSelectedRowIndex() == -1){
+			return null;
 		}
+		ObservableList old = this.tv.getItems().get(selectedRowIndex);
+		ObservableList neww =FXCollections.observableArrayList(new String[old.size()]);
+		FXCollections.copy(neww, old);
+		return neww;
+		//			updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), neww, old);
 	}
 
 	/**Mark a table row's data at index as edited. When database synchronization happens, this edited data will be used to update the database.*/
@@ -123,21 +124,15 @@ public class DBTable implements IDBTableData{
 		this.rowsEdited.add(edit);
 	}
 
-
-	@Override
-	public List<DBTableEdit> getEditedData(){
-		return (List<DBTableEdit>)this.rowsEdited.clone();
-	}
-
 	@Override
 	public void clearEdited(){
 		this.rowsEdited.clear();
 	}
 
 	/**
-	 * Adds an empty row to the table view.
+	 * Creates and returns a new list of data
 	 */
-	public void addEmptyRow() {
+	public ObservableList<String> getNewRowData() {
 		if (!this.hasColumns()){
 			throw new IllegalStateException("Can't add an empty row when there isn't any data to add to");
 		}
@@ -146,9 +141,11 @@ public class DBTable implements IDBTableData{
 		for (int i = 0; i < this.tv.getColumns().size(); i++){
 			data[i] = "new data";
 		}
+
 		ObservableList<String> row = FXCollections.observableArrayList();
 		row.addAll(data);
-		updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), row, null);
+		return row;
+//		updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), row, null);
 	}
 
 	@Override
@@ -160,54 +157,34 @@ public class DBTable implements IDBTableData{
 		}else{
 			this.tv.getItems().set(rowIndex, newData);
 		}
-		int i = 0;
-		DBTableEdit edit;
-		boolean discardNewEdit = false;
-		while(i < this.rowsEdited.size()){
-			edit = this.rowsEdited.get(i);
-			if(edit.rowIndex() != rowIndex){
-				i++;
-				continue;
-			}
-			if(edit.type() == DBTableEdit.EditType.ADDITION){
-				if(type == DBTableEdit.EditType.UPDATE){
-					edit.setNewRowData(newData);
-					discardNewEdit = true;
-				}else if(type == DBTableEdit.EditType.DELETION){
-					this.rowsEdited.remove(edit);
-					discardNewEdit = true;
-					continue;
-				}
-			}else if(edit.type() == DBTableEdit.EditType.UPDATE){
-				if(type == DBTableEdit.EditType.UPDATE){
-					edit.setNewRowData(newData);
-					discardNewEdit = true;
-					continue;
-				}else if(type == DBTableEdit.EditType.DELETION){
-					this.rowsEdited.remove(edit);
-					continue;
-				}
-			}else if(edit.type() == DBTableEdit.EditType.DELETION){
-				if(type == DBTableEdit.EditType.ADDITION){
-					this.rowsEdited.remove(edit);
-					continue;
-				}
-			}
 
-			i++;
-		}
 		if(type == DBTableEdit.EditType.DELETION){
-			for(i = 0; i < this.rowsEdited.size(); i++){
+			for(int i = 0; i < this.rowsEdited.size(); i++){
 				if(this.rowsEdited.get(i).rowIndex() > rowIndex){
 					this.rowsEdited.get(i).decrementRowIndex(1); //since an element is getting removed from the table, the indexes need to be shifted -1 to realign their indexes
 				}
 			}
 		}
-		if(discardNewEdit){
-			return;
-		}
+
 		this.markAsEdited(type, rowIndex, newData, oldData);
 	}
+
+	/**Undo the edit made to the table*/
+	public void undoLastEdit() {
+		if(this.rowsEdited.size() == 0){
+			return;
+		}
+		DBTableEdit edit = this.rowsEdited.get(this.rowsEdited.size() - 1);
+		if(edit.type() == DBTableEdit.EditType.DELETION){
+			this.tv.getItems().add(edit.rowIndex(), edit.oldRowData());
+		}else if(edit.type() == DBTableEdit.EditType.ADDITION){
+			this.tv.getItems().remove(edit.rowIndex());
+		}else{
+			this.tv.getItems().set(edit.rowIndex(), edit.oldRowData());
+		}
+		this.rowsEdited.remove(this.rowsEdited.size() - 1);
+	}
+
 
 	@Override
 	public ObservableList getData(int rowIndex) {
@@ -220,6 +197,11 @@ public class DBTable implements IDBTableData{
 	}
 
 	@Override
+	public Iterator<DBTableEdit> iterator(boolean reversed) {
+		return new EditedDataIterator(this, reversed);
+	}
+
+	@Override
 	public String[] getColumnTypes(){
 		return this.columnTypes;
 	}
@@ -229,23 +211,39 @@ public class DBTable implements IDBTableData{
 		return this.columnNames;
 	}
 
+	/**Get the number of rows in the table*/
+	public int getRowSize() {
+		return this.tv.getItems().size();
+	}
 
 	private class EditedDataIterator implements Iterator<DBTableEdit>{
 
 		private final DBTable table;
 		private int cursor = 0;
+		private final boolean reverse;
 
-		public EditedDataIterator(DBTable table) {
+
+		public EditedDataIterator(DBTable table, boolean reverse) {
 			this.table = table;
+			this.reverse = reverse;
+			if(reverse){
+				this.cursor = this.table.rowsEdited.size() - 1;
+			}
 		}
 
 		@Override
 		public boolean hasNext() {
+			if(reverse){
+				return cursor >= 0;
+			}
 			return cursor < table.rowsEdited.size();
 		}
 
 		@Override
 		public DBTableEdit next() {
+			if(reverse){
+				return this.table.rowsEdited.get(cursor--);
+			}
 			return this.table.rowsEdited.get(cursor++);
 		}
 	}

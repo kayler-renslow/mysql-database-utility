@@ -3,6 +3,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.database;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.ConnectionException;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlConnection;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryFailedException;
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IConnectionUpdate;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IQueryExecuteEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
@@ -28,6 +29,7 @@ public class DatabaseConnection{
 	private IConnectionUpdate conUpdate;
 	private IQueryExecuteEvent qee;
 	private String sql;
+	private QueryType queryType;
 
 	private ConnectionStatus status = ConnectionStatus.DISCONNECTED;
 	private IDBTableData dBTable;
@@ -58,8 +60,9 @@ public class DatabaseConnection{
 	/**
 	 * Sets the current SQL query to parameter sql
 	 */
-	public void prepareQuery(String sql) {
+	public void prepareQuery(String sql, QueryType qt) {
 		this.sql = sql;
+		this.queryType = qt;
 	}
 
 	/**
@@ -123,7 +126,7 @@ public class DatabaseConnection{
 		}
 		try{
 			connectionUpdate(Lang.CONN_STATUS_BEGIN_QUERY_LONG + this.sql, null, ConnectionStatus.QUERY_BEGIN);
-			ResultSet rs = mysqlConn.query(this.sql);
+			ResultSet rs = mysqlConn.query(this.sql, this.queryType);
 			connectionUpdate(null, rs, ConnectionStatus.QUERY_END);
 		}catch (QueryFailedException e){
 			connectionUpdate(Lang.CONN_STATUS_QUERY_ERROR_LONG, e.getMessage(), ConnectionStatus.QUERY_FAIL);
@@ -184,7 +187,7 @@ public class DatabaseConnection{
 
 
 		DBTableEdit edit;
-		Iterator<DBTableEdit> iter = this.dBTable.getEditedData().iterator();
+		Iterator<DBTableEdit> iter = this.dBTable.iterator(false);
 
 		while (iter.hasNext()){
 			edit = iter.next();
@@ -223,7 +226,7 @@ public class DatabaseConnection{
 				return;
 			}
 		}
-		System.out.println("----Queries complete-----");
+		System.out.println("----Sync Queries complete-----");
 		this.dBTable.clearEdited();
 	}
 

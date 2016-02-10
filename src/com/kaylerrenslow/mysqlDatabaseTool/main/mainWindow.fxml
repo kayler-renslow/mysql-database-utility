@@ -33,11 +33,19 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></TextArea>
-                  <Button fx:id="btnExecuteQuery" mnemonicParsing="false" text="Execute Query">
+                  <HBox prefHeight="0.0" prefWidth="217.0">
+                     <children>
+                        <Button fx:id="btnExecuteQuery" mnemonicParsing="false" text="Execute Query">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <ChoiceBox fx:id="cbDmlDdl" prefHeight="25.0" prefWidth="86.0" />
+                     </children>
                      <VBox.margin>
-                        <Insets top="3.0" />
+                        <Insets top="5.0" />
                      </VBox.margin>
-                  </Button>
+                  </HBox>
                   <Separator prefHeight="3.0" prefWidth="209.0">
                      <VBox.margin>
                         <Insets bottom="4.0" top="14.0" />

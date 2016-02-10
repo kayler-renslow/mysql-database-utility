@@ -31,6 +31,9 @@ public class InitController implements Initializable{
     @FXML
     Button btnExecuteQuery;
 
+    @FXML
+    ChoiceBox cbDmlDdl;
+
     /**/
 
     @FXML

@@ -1,9 +1,9 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.menu;
 
-import com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editorWindow.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuItem;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.IFXMenuEventHandle;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
