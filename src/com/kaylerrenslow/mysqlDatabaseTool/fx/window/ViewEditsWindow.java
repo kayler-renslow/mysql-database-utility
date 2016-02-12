@@ -35,6 +35,8 @@ public class ViewEditsWindow extends VBox implements IFXWindow{
 	private VBox vbEdits = new VBox();
 	private ScrollPane scrollPane = new ScrollPane(vbEdits);
 
+	private boolean noEdits = false;
+
 	public ViewEditsWindow(QueryFXController qc) {
 		initialize(qc.tableEditIterator(), qc);
 	}
@@ -55,65 +57,74 @@ public class ViewEditsWindow extends VBox implements IFXWindow{
 			}
 		});
 
-		HBox hbRowContent;
-		VBox vbDataChange;
-		TextField tfOldData, tfNewData;
-		Label lblEditType;
-
-		DBTableEdit edit;
-
-		while(iter.hasNext()){
-			edit = iter.next();
-
-			tfOldData = new TextField();
-			tfNewData = new TextField();
-			tfOldData.setMaxWidth(Double.MAX_VALUE);
-			tfNewData.setMaxWidth(Double.MAX_VALUE);
-
-			tfOldData.setEditable(false);
-			tfNewData.setEditable(false);
-			vbDataChange = new VBox();
-			VBox.setMargin(tfOldData, MARGIN_BOTTOM5);
-			if(edit.type() == DBTableEdit.EditType.DELETION){
-				tfOldData.setStyle(TF_STYLE_DELETED_DATA);
-				tfOldData.setText(edit.oldRowData().toString());
-
-				vbDataChange.getChildren().add(tfOldData);
-			}else if(edit.type() == DBTableEdit.EditType.UPDATE){
-				tfOldData.setStyle(TF_STYLE_OLD_DATA);
-				tfOldData.setText(edit.oldRowData().toString());
-
-				tfNewData.setText(edit.newRowData().toString());
-				tfNewData.setStyle(TF_STYLE_NEW_DATA);
-
-				vbDataChange.getChildren().addAll(tfOldData, tfNewData);
-			}else if(edit.type() == DBTableEdit.EditType.ADDITION){
-				tfNewData.setText(edit.newRowData().toString());
-				tfNewData.setStyle(TF_STYLE_NEW_DATA);
-
-				vbDataChange.getChildren().add(tfNewData);
+		if(!iter.hasNext()){ //no edits
+			noEdits = true;
+			HBox noedits = new HBox();
+			Label l = new Label(Lang.WINDOW_VIEW_EDITS_NO_EDITS);
+			this.vbEdits.getChildren().add(l);
+			btnRemoveLastestEdit.setDisable(true);
+		}else{
+			while(iter.hasNext()){
+				addEditHboxPanel(iter.next());
 			}
-
-
-			lblEditType = new Label(edit.type().name());
-
-			hbRowContent = new HBox();
-			hbRowContent.setMaxWidth(Double.MAX_VALUE);
-			hbRowContent.getChildren().addAll(lblEditType, vbDataChange);
-			vbDataChange.setFillWidth(true);
-			HBox.setHgrow(vbDataChange, Priority.ALWAYS);
-			HBox.setMargin(lblEditType, MARGIN_RIGHT5);
-
-			hbRowContent.setPadding(PADDING);
-
-			this.vbEdits.getChildren().add(hbRowContent);
-
-			HBox.setHgrow(tfNewData, Priority.ALWAYS);
-			HBox.setHgrow(tfOldData, Priority.ALWAYS);
-			VBox.setMargin(hbRowContent, MARGIN_BOTTOM5);
 		}
+
 		this.getChildren().add(scrollPane);
 
+	}
+
+	private void addEditHboxPanel(DBTableEdit edit) {
+		TextField tfOldData;
+		TextField tfNewData;
+		VBox vbDataChange;
+		Label lblEditType;
+		HBox hbRowContent;
+
+		tfOldData = new TextField();
+		tfNewData = new TextField();
+		tfOldData.setMaxWidth(Double.MAX_VALUE);
+		tfNewData.setMaxWidth(Double.MAX_VALUE);
+
+		tfOldData.setEditable(false);
+		tfNewData.setEditable(false);
+		vbDataChange = new VBox();
+		VBox.setMargin(tfOldData, MARGIN_BOTTOM5);
+		if(edit.type() == DBTableEdit.EditType.DELETION){
+			tfOldData.setStyle(TF_STYLE_DELETED_DATA);
+			tfOldData.setText(edit.oldRowData().toString());
+
+			vbDataChange.getChildren().add(tfOldData);
+		}else if(edit.type() == DBTableEdit.EditType.UPDATE){
+			tfOldData.setStyle(TF_STYLE_OLD_DATA);
+			tfOldData.setText(edit.oldRowData().toString());
+
+			tfNewData.setText(edit.newRowData().toString());
+			tfNewData.setStyle(TF_STYLE_NEW_DATA);
+
+			vbDataChange.getChildren().addAll(tfOldData, tfNewData);
+		}else if(edit.type() == DBTableEdit.EditType.ADDITION){
+			tfNewData.setText(edit.newRowData().toString());
+			tfNewData.setStyle(TF_STYLE_NEW_DATA);
+
+			vbDataChange.getChildren().add(tfNewData);
+		}
+
+		lblEditType = new Label(edit.type().name());
+
+		hbRowContent = new HBox();
+		hbRowContent.setMaxWidth(Double.MAX_VALUE);
+		hbRowContent.getChildren().addAll(lblEditType, vbDataChange);
+		vbDataChange.setFillWidth(true);
+		HBox.setHgrow(vbDataChange, Priority.ALWAYS);
+		HBox.setMargin(lblEditType, MARGIN_RIGHT5);
+
+		hbRowContent.setPadding(PADDING);
+
+		this.vbEdits.getChildren().add(hbRowContent);
+
+		HBox.setHgrow(tfNewData, Priority.ALWAYS);
+		HBox.setHgrow(tfOldData, Priority.ALWAYS);
+		VBox.setMargin(hbRowContent, MARGIN_BOTTOM5);
 	}
 
 	private void removeFirstChild(){

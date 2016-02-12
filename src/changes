@@ -1,1 +1,1 @@
--stopped passing around JDBC ResultSet and instead made a new class (MysqlQueryResult) to take it's place.
+-show edit window will no say explicitly if there has not been edits made

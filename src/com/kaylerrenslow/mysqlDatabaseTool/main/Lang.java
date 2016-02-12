@@ -62,9 +62,9 @@ public class Lang {
     /*Begin constants for menu bar strings*/
 
     public static final String MENUB_DATA_TITLE = "Data";
-    public static final String MENUB_DATA_NEW_ENTRY = "New Entry";
-    public static final String MENUB_DATA_SYNC_DATA = "Sync data to Database";
-	public static final String MENUB_DATA_LIST_TABLES = "List All Tables";
+    public static final String MENUB_DATA_NEW_ENTRY = "New entry";
+    public static final String MENUB_DATA_SYNC_DATA = "Sync table data to database";
+	public static final String MENUB_DATA_LIST_TABLES = "List all tables";
 	public static final String MENUB_DATA_VIEW_EDITS = "View table edits";
 
     /*End constants for menu bar strings*/
@@ -85,4 +85,5 @@ public class Lang {
 	public static final String WINDOW_ALL_TABLES = "All SQL tables";
 	public static final String WINDOW_DATA_SYNC = "Synchronize the table to the server";
 	public static final String WINDOW_VIEW_EDITS = "All edits made to the table";
+	public static final String WINDOW_VIEW_EDITS_NO_EDITS = "No changes have been made.";
 }
