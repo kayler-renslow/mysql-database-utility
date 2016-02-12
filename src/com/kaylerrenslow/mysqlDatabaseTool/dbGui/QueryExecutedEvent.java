@@ -1,12 +1,11 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlQueryResult;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
-import java.sql.ResultSet;
 
 /**
  *@author Kayler
@@ -37,7 +36,7 @@ public class QueryExecutedEvent implements IQueryExecuteEvent, EventHandler<Acti
     }
 
     @Override
-    public void querySuccess(ResultSet rs) {
+    public void querySuccess(MysqlQueryResult rs) {
         try{
             this.qc.querySuccess(rs);
         }catch(Exception e){

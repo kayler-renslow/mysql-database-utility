@@ -1,11 +1,10 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlQueryResult;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DatabaseFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-
-import java.sql.ResultSet;
 
 /**
  * @author Kayler
@@ -73,7 +72,7 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 	}
 
 	private void queryEnd() {
-		Program.DATABASE_CONNECTION.getQueryExecuteEvent().querySuccess((ResultSet) this.data);
+		Program.DATABASE_CONNECTION.getQueryExecuteEvent().querySuccess((MysqlQueryResult) this.data);
 	}
 
 	@Override

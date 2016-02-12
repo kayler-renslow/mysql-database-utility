@@ -1,2 +1,1 @@
--renamed the query types since jdbc's executeQuery and executeUpdate methods weren't based upon ddl and dml specs
--fixed bug of menu item 'sync to database' being enabled when the table had no columns
+-stopped passing around JDBC ResultSet and instead made a new class (MysqlQueryResult) to take it's place.

@@ -1,9 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.database;
 
-import com.kaylerrenslow.mysqlDatabaseTool.database.lib.ConnectionException;
-import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlConnection;
-import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryFailedException;
-import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.*;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IConnectionUpdate;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IQueryExecuteEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
@@ -126,7 +123,7 @@ public class DatabaseConnection{
 		}
 		try{
 			connectionUpdate(Lang.CONN_STATUS_BEGIN_QUERY_LONG + this.sql, null, ConnectionStatus.QUERY_BEGIN);
-			ResultSet rs = mysqlConn.query(this.sql, this.queryType);
+			MysqlQueryResult rs = mysqlConn.query(this.sql, this.queryType);
 			connectionUpdate(null, rs, ConnectionStatus.QUERY_END);
 		}catch (QueryFailedException e){
 			connectionUpdate(Lang.CONN_STATUS_QUERY_ERROR_LONG, e.getMessage(), ConnectionStatus.QUERY_FAIL);

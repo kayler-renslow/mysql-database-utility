@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
-import java.sql.ResultSet;
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlQueryResult;
 /**
  * @author Kayler
  * Interface used to tell JavaFX controllers that a query was executed in the DatabaseConnection.
@@ -8,8 +8,8 @@ import java.sql.ResultSet;
  * Created on 11/11/15.
  */
 public interface IQueryExecuteEvent {
-    /**This method is ran when a query has been successfully executed. ResultSet rs is the result of the query.*/
-    void querySuccess(ResultSet rs);
+    /**This method is ran when a query has been successfully executed. MysqlQueryResult rs is the result of the query.*/
+    void querySuccess(MysqlQueryResult rs);
 
     /**This method is ran when a query that was executed failed.
      * @param failMsg message that explains why the query failed*/

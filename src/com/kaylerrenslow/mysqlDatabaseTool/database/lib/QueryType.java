@@ -6,10 +6,10 @@ package com.kaylerrenslow.mysqlDatabaseTool.database.lib;
  * Created on 02/09/2016.
  */
 public enum QueryType{
-	/**Used when SELECT, INSERT, etc are used*/
+	/**Used when SELECT is used*/
 	SELECTION("SELECTION"),
 
-	/**Used when ALTER, SELECTION, etc are used*/
+	/**Used when ALTER, UPDATE, INSERT, etc are used*/
 	UPDATE("UPDATE");
 
 	final String text;

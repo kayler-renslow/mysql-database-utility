@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.db;
 
-import com.kaylerrenslow.mysqlDatabaseTool.database.lib.SQLTypes;
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlQueryResult;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.contextMenu.CM_DBTableView;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.factory.TableRowFactory;
 import javafx.collections.FXCollections;
@@ -9,9 +9,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.sql.JDBCType;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,12 +21,10 @@ import java.util.Iterator;
 public class DBTable implements IDBTableData{
 	private final TableView<ObservableList> tv;
 	private ContextMenu cm;
-	private String[] columnTypes;
-	private JDBCType[] columnJDBCTypes;
-	private String[] columnNames;
 
 	/**The table row data that was edited before the last database synchronization*/
 	private ArrayList<DBTableEdit> rowsEdited = new ArrayList<>();
+	private String[] columnTypes, columnNames;
 
 	public DBTable(TableView tv) {
 		this.tv = tv;
@@ -48,46 +43,38 @@ public class DBTable implements IDBTableData{
 	/**
 	 * Clears the table and then adds the query data to the table.
 	 */
-	public void addQueryDataToTable(ResultSet rs) throws SQLException {
+	public void addQueryDataToTable(MysqlQueryResult rs) throws SQLException {
 		tv.getColumns().clear();
 		if(rs == null){
 			return;
 		}
-		ResultSetMetaData rsmd = rs.getMetaData();
+		this.columnNames = rs.getColNames();
+		this.columnTypes = rs.getColumnTypes();
 
 		//add all the table columns
-		String colName;
 		TableColumn tcol;
-		this.columnTypes = new String[rsmd.getColumnCount()];
-		this.columnNames = new String[rsmd.getColumnCount()];
-		this.columnJDBCTypes = new JDBCType[rsmd.getColumnCount()];
-		for (int col = 1; col <= rsmd.getColumnCount(); col++){
-			colName = rsmd.getColumnName(col);
-			this.columnTypes[col - 1] = SQLTypes.convertToString(rsmd.getColumnType(col));
-			this.columnNames[col - 1] = colName;
-			this.columnJDBCTypes[col - 1] = SQLTypes.convertToType(rsmd.getColumnType(col));
-			tcol = new TableColumn<>(colName);
-			tcol.setCellValueFactory(new TableRowFactory(col - 1));
+
+		for (int col = 0; col < rs.getNumColumns(); col++){
+			tcol = new TableColumn<>(rs.getColNames()[col]);
+			tcol.setCellValueFactory(new TableRowFactory(col));
 			tv.getColumns().add(tcol);
 		}
 
 		//object that holds all the row data
 		ObservableList<ObservableList> allRows = FXCollections.observableArrayList();
 
-		addNewRows(rs, rsmd.getColumnCount(), allRows);
+		addNewRows(rs, allRows);
 
 		tv.setItems(allRows);
 	}
 
-	private void addNewRows(ResultSet rs, int columnCount, ObservableList allRows) throws SQLException {
+	private void addNewRows(MysqlQueryResult rs, ObservableList allRows) throws SQLException {
 		ObservableList<String> row;
 
 		//now add all of the row data
-		while (rs.next()){
-			row = FXCollections.observableArrayList();
-			for (int col = 1; col <= columnCount; col++){
-				row.add(rs.getString(col));
-			}
+		Iterator<String[]> iter = rs.rowIterator();
+		while(iter.hasNext()){
+			row = FXCollections.observableArrayList(iter.next());
 			allRows.add(row);
 		}
 	}

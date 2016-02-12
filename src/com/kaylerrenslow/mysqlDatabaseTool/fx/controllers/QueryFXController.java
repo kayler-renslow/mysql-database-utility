@@ -1,5 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.fx.controllers;
 
+import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlQueryResult;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.QueryExecutedEvent;
@@ -17,7 +18,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 
@@ -104,7 +104,7 @@ public class QueryFXController{
 	/**
 	 * Handle's the query result and adds it into the TableView
 	 */
-	public void querySuccess(ResultSet rs) throws SQLException {
+	public void querySuccess(MysqlQueryResult rs) throws SQLException {
 		this.tfTextQuery.setStyle(STYLE_DEFAULT);
 		this.dbTable.addQueryDataToTable(rs);
 	}
