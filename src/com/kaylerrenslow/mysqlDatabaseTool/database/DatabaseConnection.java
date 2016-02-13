@@ -6,6 +6,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IQueryExecuteEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.IDBTableData;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
+import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.collections.ObservableList;
 
 import java.io.File;
@@ -63,6 +64,10 @@ public class DatabaseConnection{
 
 	public void prepareQueryToLoadTable(String tablename){
 		prepareQuery("SELECT * FROM "+ tablename, QueryType.SELECTION);
+	}
+
+	private String getCommentSQL(String table, String columnName){
+		return "SELECT COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+this.mysqlConn.getDatabaseName()+"' AND TABLE_NAME = '"+table+"' AND COLUMN_NAME = '"+columnName+"';";
 	}
 
 	/**
@@ -163,7 +168,7 @@ public class DatabaseConnection{
 
 	public void synchronize() {
 		if (this.dBTable == null){
-			throw new IllegalStateException("In order to synchronize the data, setQueryResultDBTable(), must be called");
+			throw new IllegalStateException("In order to synchronize the data, setDBTable(), must be called");
 		}
 		if (!this.dBTable.hasColumns()){
 			throw new IllegalStateException("Can't synchronize a table when there isn't any columns");
@@ -174,31 +179,38 @@ public class DatabaseConnection{
 		try{
 			DatabaseMetaData md = this.mysqlConn.getDBMetadata();
 			ResultSet rs = md.getPrimaryKeys(null, null, tableName);
-			rs.next();
-			primaryKey = rs.getString(4);
+			if(rs.next()){
+				primaryKey = rs.getString(4);
+			}
 		}catch (Exception e){
 			System.err.println("Synchronize failed. " + e.getMessage());
+			WebsiteDatabaseTool.showErrorWindow("Synchronization failed.", e.getMessage());
 			return;
 		}
-
 
 		DBTableEdit edit;
 		Iterator<DBTableEdit> iter = this.dBTable.iterator(false);
 
 		while (iter.hasNext()){
 			edit = iter.next();
+			String whereCond;
 			String primaryKeyValue = "";
-			for (int i = 0; i < this.dBTable.getColumnNames().length; i++){
-				if (this.dBTable.getColumnNames()[i].equals(primaryKey)){
-					primaryKeyValue = (String) edit.oldRowData().get(i);
-					break;
+			if(primaryKey != null){
+				for (int i = 0; i < this.dBTable.getColumnNames().length; i++){
+					if (this.dBTable.getColumnNames()[i].equals(primaryKey)){
+						primaryKeyValue = (String) edit.oldRowData().get(i);
+						break;
+					}
 				}
+				whereCond =  " WHERE " + primaryKey + "='" + primaryKeyValue + "'";
+			}else{
+				whereCond = getWhereCondition(this.dBTable.getColumnNames(), edit.oldRowData());
 			}
 			try{
 				String query;
 				if (edit.type() == DBTableEdit.EditType.DELETION){
 
-					query = "DELETE FROM " + tableName + " WHERE " + primaryKey + "='" + primaryKeyValue + "'";
+					query = "DELETE FROM " + tableName + whereCond;
 
 				}else if (edit.type() == DBTableEdit.EditType.ADDITION){
 
@@ -208,7 +220,7 @@ public class DatabaseConnection{
 
 					query = "UPDATE " + tableName + " SET ";
 					query += getUpdateString(this.dBTable.getColumnNames(), edit.newRowData());
-					query += " WHERE " + primaryKey + "='" + primaryKeyValue + "'";
+					query += whereCond;
 
 				}else {
 					throw new IllegalStateException("Edit type '" + edit.type() + "' not supported");
@@ -229,8 +241,22 @@ public class DatabaseConnection{
 	/**
 	 * Set the table that will be used for synchronizing data. Can't be null.
 	 */
-	public void setQueryResultDBTable(IDBTableData dBTable) {
+	public void setDBTable(IDBTableData dBTable) {
 		this.dBTable = dBTable;
+	}
+
+	private String getWhereCondition(String[] fields, ObservableList<?> values){
+		String s = " WHERE ";
+		Iterator iter = values.iterator();
+		int i = 0;
+		while (iter.hasNext()){
+			s += fields[i] + "='" + iter.next() + "'";
+			if (iter.hasNext()){
+				s += " AND ";
+			}
+			i++;
+		}
+		return s;
 	}
 
 

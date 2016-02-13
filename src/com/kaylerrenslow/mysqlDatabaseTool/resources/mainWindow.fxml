@@ -78,7 +78,7 @@
                               <Insets />
                            </VBox.margin>
                            <children>
-                              <Button fx:id="btnConnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="138.0" text="Connect" />
+                              <Button fx:id="btnConnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="172.0" text="Connect" />
                               <Button fx:id="btnDisconnect" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Disconnect" />
                            </children>
                         </HBox>

@@ -29,11 +29,17 @@ public class DBTable implements IDBTableData{
 	private ArrayList<DBTableEdit> rowsEdited = new ArrayList<>();
 	private String[] columnTypes, columnNames;
 
+	/** Creates a DBTable instance with the given Database table name.
+	 * @param tableName name of a table in the database. If null, this DBTable instance won't have a context menu
+	 * @param qc QueryFXController instance
+	 */
 	public DBTable(String tableName, QueryFXController qc) {
 		this.qc = qc;
 		this.tv = new TableView<>();
 		this.tableName = tableName;
-		initializeContextMenu(qc);
+		if(this.tableName != null){
+			initializeContextMenu(qc);
+		}
 	}
 
 	public TableView getTableView(){
@@ -45,6 +51,7 @@ public class DBTable implements IDBTableData{
 		this.tv.setContextMenu(cm);
 	}
 
+	/**Clears all the entries from the table*/
 	public void clearTable(){
 		this.tv.getItems().clear();
 	}
@@ -143,13 +150,12 @@ public class DBTable implements IDBTableData{
 
 		String[] data = new String[this.tv.getColumns().size()];
 		for (int i = 0; i < this.tv.getColumns().size(); i++){
-			data[i] = "new data";
+			data[i] = "";
 		}
 
 		ObservableList<String> row = FXCollections.observableArrayList();
 		row.addAll(data);
 		return row;
-//		updateData(DBTableEdit.EditType.ADDITION, this.tv.getItems().size(), row, null);
 	}
 
 	@Override

@@ -201,4 +201,8 @@ public class MysqlConnection{
 	public boolean connectionPropertiesSet() {
 		return this.connectionPropertiesSet;
 	}
+
+	public String getDatabaseName() {
+		return this.database;
+	}
 }

@@ -1,11 +1,5 @@
--added length of column type in data editor
--column names are now what was specified in an AS clause or the default column name is AS wasnt defined
--created resources folder
-	-created icon for program
-	-moved mainwindow.fxml to resources folder
--moved query result table into tabbed pane. each table in database will get its own tab
-	-synchronization happens from right click menu in tabs
-	-view edits window will come from right click menu in tabs
-	-added context menu to close tabs
--moved all features out of main menu bar
--displaying all data from tables and putting into tabs can be done through the main menu
+-fixed bug when sync couldnt occur because the table had no primary keys. now if there are now primary keys, it will delete everywhere where all the values match
+-moved view edits stuff out of the ViewEditsWindow class and into it's own class so that it can be injected in other windows
+-when syncing, a confirmation popup showing all edits appears asking for confirmation of the sync
+-new entry now makes all the fields empty instead of putting a space or placeholder text
+-now can refresh tab's tableview's data

@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -24,8 +25,9 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
 	private static final String ICON_PATH = "/com/kaylerrenslow/mysqlDatabaseTool/resources/website_database_tool_icon.png";
 
     private static ArrayList<FXStageWrapper> subWindows = new ArrayList<>();
+	private static Image ICON;
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
         launch(args);
     }
 
@@ -39,7 +41,8 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
         WebsiteDatabaseTool.stage.show();
 		stage.setOnCloseRequest(this);
 
-		stage.getIcons().add(new Image(getClass().getResourceAsStream(ICON_PATH)));
+		ICON = new Image(getClass().getResourceAsStream(ICON_PATH));
+		stage.getIcons().add(ICON);
     }
 
 
@@ -51,7 +54,13 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
         subWindows.add(new FXStageWrapper(stage, window));
         stage.setTitle(window.getTitle());
         stage.show();
+		stage.getIcons().add(ICON);
+
     }
+
+	public static void showErrorWindow(String title, String errorMsg){
+		JOptionPane.showMessageDialog(null, errorMsg, title, JOptionPane.ERROR_MESSAGE);
+	}
 
 	@Override
 	public void handle(WindowEvent event) {

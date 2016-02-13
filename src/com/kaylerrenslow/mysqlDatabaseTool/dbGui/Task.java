@@ -13,12 +13,16 @@ import javafx.beans.value.ObservableValue;
 public abstract class Task extends javafx.concurrent.Task<Object>{
 
 	private boolean debug;
+	private Task self = this;
 
 	public Task() {
 		this.exceptionProperty().addListener(new ChangeListener<Throwable>(){
 			@Override
 			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue, Throwable newValue) {
+				System.err.println("Task exception:");
 				newValue.printStackTrace();
+//				self.cancel();
+				self.cancel(true);
 			}
 		});
 

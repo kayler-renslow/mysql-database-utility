@@ -62,14 +62,14 @@ public class Lang {
     /*Begin constants for menu bar strings*/
     public static final String MENUB_TITLE_VIEW = "View";
 	public static final String MENUB_ITEM_ADD_NEW_TABLE = "Add New Table";
-	public static final java.lang.String MENUB_ITEM_NO_TABLES = "No Tables to Show";
+	public static final String MENUB_ITEM_NO_TABLES = "No Tables to Show";
 	/*End constants for menu bar strings*/
 
     /*Begin constants for context menu strings*/
 	public static final String CONTEXT_MENU_DBTV_EDIT = "Edit";
 	public static final String CONTEXT_MENU_DBTV_REMOVE_ROW = "Remove Row";
 	public static final String CONTEXT_MENU_DBTV_DUPLICATE = "Duplicate";
-	public static final String CONTEXT_MENU_DBTV_DATA_NEW_ENTRY = "New entry";
+	public static final String CONTEXT_MENU_DBTV_DATA_NEW_ENTRY = "New Entry";
 	public static final String CONTEXT_MENU_DBTV_VIEW_EDITS = "View Edits";
 	public static final String CONTEXT_MENU_DBTV_REFRESH = "Refresh";
 	public static final String CONTEXT_MENU_DBTV_SYNC_DATA = "Synchronize to Database";
@@ -85,7 +85,9 @@ public class Lang {
 	public static final String TAB_PANE_TITLE_QUERY_RESULT = "Query Result";
 
 	public static final String WINDOW_ALL_TABLES = "All SQL tables";
-	public static final String WINDOW_DATA_SYNC = "Synchronize the table to the server";
-	public static final String WINDOW_VIEW_EDITS = "All edits made to the table";
+	public static final String WINDOW_VIEW_EDITS_PREFIX = "All Edits Made to ";
 	public static final String WINDOW_VIEW_EDITS_NO_EDITS = "No changes have been made.";
+
+	public static final String WINDOW_CONFIRM_SYNC_TITLE = "Confirm Synchronization Changes";
+	public static final String WINDOW_CONFIRM_SYNC_MESSAGE = "Are you sure you want to synchronize '%s' to the server's database?";
 }

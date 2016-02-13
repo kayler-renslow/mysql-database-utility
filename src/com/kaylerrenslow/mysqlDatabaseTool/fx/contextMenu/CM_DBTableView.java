@@ -24,14 +24,16 @@ public class CM_DBTableView extends javafx.scene.control.ContextMenu implements 
 	private FXMenuItem duplicate = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_DUPLICATE);
 	private FXMenuItem removeRow = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_REMOVE_ROW);
 	private FXMenuItem newEntry = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_DATA_NEW_ENTRY);
+	private FXMenuItem refresh = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_REFRESH);
 	private FXMenuItem sync = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_SYNC_DATA);
 	private FXMenuItem viewEdits = new FXMenuItem(Lang.CONTEXT_MENU_DBTV_VIEW_EDITS);
+
 
     private final DBTable dbTable;
 
     public CM_DBTableView(DBTable dbTable, QueryFXController qc){
 		this.qc = qc;
-        FXMenuUtil.addItems(this, this, edit, duplicate, newEntry, sync, viewEdits, removeRow);
+        FXMenuUtil.addItems(this, this, edit, duplicate, newEntry, refresh, sync, viewEdits, removeRow);
         this.dbTable = dbTable;
     }
 
@@ -52,6 +54,8 @@ public class CM_DBTableView extends javafx.scene.control.ContextMenu implements 
 			this.dbTable.synchronizeToDatabase();
 		}else if(viewEdits.matchesIndex(index)){
 			WebsiteDatabaseTool.createNewWindow(new ViewEditsWindow(this.dbTable, this.qc));
+		}else if(refresh.matchesIndex(index)){
+			qc.refreshTable(this.dbTable);
 		}
     }
 
