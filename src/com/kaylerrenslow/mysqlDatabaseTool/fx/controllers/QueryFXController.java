@@ -5,21 +5,16 @@ import com.kaylerrenslow.mysqlDatabaseTool.database.lib.QueryType;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.QueryExecutedEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.FXUtil;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.contextMenu.CM_TabPane;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 
 import java.sql.SQLException;
-import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * @author Kayler
@@ -32,21 +27,32 @@ public class QueryFXController{
 	private Button btnExecute;
 
 	private TextArea tfTextQuery;
-	private DBTable dbTable;
+	private DBTable dbTableQueryResults;
 
-	private DBConnectionFXController connControl;
+	private TabPane tabPane;
+	private ArrayList<TabTableView> tabs = new ArrayList<>();
+
+	public final DBConnectionFXController connControl;
 	public QueryExecutedEvent qee = new QueryExecutedEvent(this);
 
 	private DBTask taskQuery;
 	private DBTask taskSync;
 
-	public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, ChoiceBox cbDmlDdl, TableView queryResultTable) {
+	private TabTableView tableForQuery;
+	private boolean initialized;
+
+	public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, ChoiceBox cbDmlDdl, TabPane tabPane) {
 		this.connControl = connControl;
 		this.tfTextQuery = queryText;
 		this.btnExecute = btnExecute;
-		this.dbTable = new DBTable(queryResultTable);
+		this.tabPane = tabPane;
 
+		this.dbTableQueryResults = new DBTable(null, this);
 		setConstructorListeners(cbDmlDdl);
+	}
+
+	private void initTabPane() {
+		addTab(Lang.TAB_PANE_TITLE_QUERY_RESULT, this.dbTableQueryResults);
 	}
 
 	private void setConstructorListeners(ChoiceBox<QueryType> cbDmlDdl) {
@@ -63,15 +69,47 @@ public class QueryFXController{
 	public void initialize() {
 		this.btnExecute.setOnAction(qee);
 		Program.DATABASE_CONNECTION.setQueryExecutedEvent(qee);
-		Program.DATABASE_CONNECTION.setDBTable(dbTable);
+		Program.DATABASE_CONNECTION.setQueryResultDBTable(dbTableQueryResults);
 		FXUtil.setEmptyContextMenu(this.tfTextQuery);
 
 		setTasks();
+		initTabPane();
+		this.initialized = true;
 	}
 
 	private void setTasks() {
 		taskQuery = new DBTask(this.connControl.getConnectionUpdate(), DBTask.TaskType.RUN_QUERY);
 		taskSync = new DBTask(this.connControl.getConnectionUpdate(), DBTask.TaskType.SYNCHRONIZE_DATA);
+	}
+
+	public void addTab(String tabName){
+		DBTable table = new DBTable(tabName, this);
+		addTab(tabName, table);
+	}
+
+	private void addTab(String tabName, DBTable table){
+		TabTableView ttt = new TabTableView(tabName, table, this);
+		tabs.add(ttt);
+		tabPane.getTabs().add(ttt);
+		tableForQuery = ttt;
+		if(table != this.dbTableQueryResults){
+			ttt.setContextMenu(new CM_TabPane(ttt, this));
+		}
+
+		//fetch the data for the new tab
+		if(this.initialized){ //don't run when this controller is being initialized because it will make the progress bar red since the query field will be empty
+			Program.DATABASE_CONNECTION.prepareQueryToLoadTable(ttt.getTable().getTableName());
+			Program.DATABASE_CONNECTION.setQueryResultDBTable(ttt.getTable());
+			DBTask.runTask(getQueryTask());
+		}
+	}
+
+	public void removeTab(Tab tab){
+		if(tab == this.tabs.get(0)){
+			throw new IllegalArgumentException("Not allowed to close the query result tab");
+		}
+		this.tabs.remove(tab);
+		this.tabPane.getTabs().remove(tab);
 	}
 
 	/**
@@ -106,39 +144,46 @@ public class QueryFXController{
 	 */
 	public void querySuccess(MysqlQueryResult rs) throws SQLException {
 		this.tfTextQuery.setStyle(STYLE_DEFAULT);
-		this.dbTable.addQueryDataToTable(rs);
+		this.tableForQuery.getTable().addQueryDataToTable(rs);
+		this.tabPane.getSelectionModel().select(this.tableForQuery); //focus to tab
+		tableForQuery = tabs.get(0); //default query result tab
+		Program.DATABASE_CONNECTION.setQueryResultDBTable(dbTableQueryResults);
 	}
 
-	/**
-	 * Add a new and empty entry to the database table
-	 */
-	public void addEmptyRow() {
-		if (Program.DATABASE_CONNECTION.isConnected()){
-			if (this.dbTable.hasColumns()){
-				WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getRowSize(), this.dbTable.getNewRowData(), true));
-			}else{
-				this.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NO_COLUMNS);
-			}
-		}else {
-			this.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NOT_CONNECTED);
+
+	/**Clears all the tables and removes all table tabs*/
+	public void clearTables() {
+		this.tabs.clear();
+		this.tabPane.getTabs().clear();
+		initTabPane();
+	}
+
+
+	public void synchronizeToDatabase(DBTable table){
+		Program.DATABASE_CONNECTION.setQueryResultDBTable(table);
+		DBTask.runTask(getDBSynchronizeTask());
+	}
+
+}
+
+class TabTableView extends Tab{
+
+	private DBTable table;
+
+	public TabTableView(String tabName, DBTable table, QueryFXController qc) {
+		super(tabName);
+		if(table == null){
+			this.table = new DBTable(tabName, qc);
+		}else{
+			this.table = table;
 		}
+		ScrollPane scroll = new ScrollPane(this.table.getTableView());
+		scroll.setFitToWidth(true);
+		scroll.setFitToHeight(true);
+		this.setContent(scroll);
 	}
 
-	/**Returns true if an empty row can be added to the table, false otherwise*/
-	public boolean canAddEmptyRow(){
-		return Program.DATABASE_CONNECTION.isConnected() && this.dbTable.hasColumns();
-	}
-
-	/**Clears the entire table*/
-	public void clearTable() {
-		this.dbTable.clearTable();
-	}
-
-	public Iterator<DBTableEdit> tableEditIterator(){
-		return this.dbTable.iterator(true);
-	}
-
-	public void removeLatestTableUpdate() {
-		this.dbTable.undoLastEdit();
+	DBTable getTable(){
+		return this.table;
 	}
 }

@@ -7,24 +7,30 @@ import javafx.scene.control.MenuItem;
  * Wrapper class for a normal JavaFX MenuItem. This class contains one additional method, getInsertionIndex(), which returns the index at which it was added from FXMenuUtil
  * Created on 12/7/15
  */
-public class FXMenuItem extends MenuItem {
-    private int insertionIndex;
+public class FXMenuItem extends MenuItem implements IFXMenuItem<MenuItem> {
+    private final FXMenuItemGuts guts = new FXMenuItemGuts();
     public FXMenuItem(String text) {
         super(text);
     }
 
-    void setInsertionIndex(int index){
-        this.insertionIndex = index;
+	@Override
+    public void setInsertionIndex(int index){
+        this.guts.setInsertionIndex(index);
     }
 
-	/**Returns the index at which it was added in an FXMenu*/
+	@Override
     public int getInsertionIndex(){
-        return this.insertionIndex;
+        return this.guts.getInsertionIndex();
     }
 
-	/**Returns true if index is the same as this instance's insertion index*/
+	@Override
 	public boolean matchesIndex(int index){
-		return this.insertionIndex == index;
+		return this.guts.matchesIndex(index);
+	}
+
+	@Override
+	public MenuItem getMenuItem() {
+		return this;
 	}
 
 }

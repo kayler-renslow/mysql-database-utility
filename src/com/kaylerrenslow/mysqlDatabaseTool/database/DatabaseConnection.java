@@ -30,7 +30,6 @@ public class DatabaseConnection{
 
 	private ConnectionStatus status = ConnectionStatus.DISCONNECTED;
 	private IDBTableData dBTable;
-	private String synchronizeTableName;
 
 	/**
 	 * The conUpdate is what is used to describe the state of the connection through each step of the connection (disconnect, connect, query, etc).
@@ -60,6 +59,10 @@ public class DatabaseConnection{
 	public void prepareQuery(String sql, QueryType qt) {
 		this.sql = sql;
 		this.queryType = qt;
+	}
+
+	public void prepareQueryToLoadTable(String tablename){
+		prepareQuery("SELECT * FROM "+ tablename, QueryType.SELECTION);
 	}
 
 	/**
@@ -158,18 +161,14 @@ public class DatabaseConnection{
 		return this.mysqlConn.isConnected();
 	}
 
-	public void prepareSynchronize(String tableName) {
-		this.synchronizeTableName = tableName;
-	}
-
 	public void synchronize() {
 		if (this.dBTable == null){
-			throw new IllegalStateException("In order to synchronize the data, setDBTable(), must be called");
+			throw new IllegalStateException("In order to synchronize the data, setQueryResultDBTable(), must be called");
 		}
 		if (!this.dBTable.hasColumns()){
 			throw new IllegalStateException("Can't synchronize a table when there isn't any columns");
 		}
-		String tableName = this.synchronizeTableName;
+		String tableName = this.dBTable.getTableName();
 
 		String primaryKey = null;
 		try{
@@ -230,7 +229,7 @@ public class DatabaseConnection{
 	/**
 	 * Set the table that will be used for synchronizing data. Can't be null.
 	 */
-	public void setDBTable(IDBTableData dBTable) {
+	public void setQueryResultDBTable(IDBTableData dBTable) {
 		this.dBTable = dBTable;
 	}
 

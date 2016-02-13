@@ -20,7 +20,7 @@ public class Controllers {
 
     Controllers(InitController cont){
         dc = new DatabaseFXController(dbCon, cont.textFieldFileURL, cont.btnLocateProperties, cont.btnConnect, cont.btnDisconnect, cont.labelConnectionStatus, cont.progressConnection, cont.taConsole);
-        qc = new QueryFXController(dbCon, cont.textAreaQuery, cont.btnExecuteQuery, cont.cbDmlDdl, cont.tableQueryResults);
+        qc = new QueryFXController(dbCon, cont.textAreaQuery, cont.btnExecuteQuery, cont.cbDmlDdl, cont.tabPane);
 
 		dbCon.initialize(dc, qc);
 		dc.initialize();

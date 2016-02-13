@@ -3,6 +3,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.db;
 import com.kaylerrenslow.mysqlDatabaseTool.database.lib.MysqlQueryResult;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.contextMenu.CM_DBTableView;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.factory.TableRowFactory;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -20,19 +21,27 @@ import java.util.Iterator;
  */
 public class DBTable implements IDBTableData{
 	private final TableView<ObservableList> tv;
+	private final String tableName;
+	private final QueryFXController qc;
 	private ContextMenu cm;
 
 	/**The table row data that was edited before the last database synchronization*/
 	private ArrayList<DBTableEdit> rowsEdited = new ArrayList<>();
 	private String[] columnTypes, columnNames;
 
-	public DBTable(TableView tv) {
-		this.tv = tv;
-		initializeContextMenu();
+	public DBTable(String tableName, QueryFXController qc) {
+		this.qc = qc;
+		this.tv = new TableView<>();
+		this.tableName = tableName;
+		initializeContextMenu(qc);
 	}
 
-	private void initializeContextMenu() {
-		cm = new CM_DBTableView(this);
+	public TableView getTableView(){
+		return this.tv;
+	}
+
+	private void initializeContextMenu(QueryFXController qc) {
+		cm = new CM_DBTableView(this, qc);
 		this.tv.setContextMenu(cm);
 	}
 
@@ -89,14 +98,14 @@ public class DBTable implements IDBTableData{
 		return this.tv.getSelectionModel().getSelectedItem();
 	}
 
-	/**Removes the currently selected row.*/
+	/**Removes the currently selected row. This method will also add the removal to the edits list*/
 	public void removeSelectedRow() {
 		if(this.getSelectedRowIndex() > -1){
 			updateData(DBTableEdit.EditType.DELETION, this.getSelectedRowIndex(), null, getSelectedRowData());
 		}
 	}
 
-	/**Duplicates the row at index selectedRowIndex and appends it to the bottom of the table*/
+	/**Duplicates the row at index selectedRowIndex and appends it to the bottom of the table. This method will also add the duplicate row into the edits when the duplicate is saved,*/
 	public ObservableList<String> duplicateRow(int selectedRowIndex) {
 		if(this.getSelectedRowIndex() == -1){
 			return null;
@@ -117,6 +126,11 @@ public class DBTable implements IDBTableData{
 	@Override
 	public void clearEdited(){
 		this.rowsEdited.clear();
+	}
+
+	@Override
+	public String getTableName() {
+		return this.tableName;
 	}
 
 	/**
@@ -204,6 +218,11 @@ public class DBTable implements IDBTableData{
 	/**Get the number of rows in the table*/
 	public int getRowSize() {
 		return this.tv.getItems().size();
+	}
+
+	/**Synchronize this table to the table on the server's database*/
+	public void synchronizeToDatabase() {
+		this.qc.synchronizeToDatabase(this);
 	}
 
 	private class EditedDataIterator implements Iterator<DBTableEdit>{

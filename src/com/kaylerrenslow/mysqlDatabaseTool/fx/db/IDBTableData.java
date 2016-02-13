@@ -31,4 +31,7 @@ public interface IDBTableData{
 
 	/**Marks all the edited rows as unedited*/
 	void clearEdited();
+
+	/**Returns the name of the table this instance is representing*/
+	String getTableName();
 }

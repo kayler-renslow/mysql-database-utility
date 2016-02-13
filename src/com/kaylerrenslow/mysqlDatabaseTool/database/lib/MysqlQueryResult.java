@@ -33,8 +33,8 @@ public class MysqlQueryResult{
 		this.colTypes = new String[rsmd.getColumnCount()];
 
 		for (int col = 1; col <= rsmd.getColumnCount(); col++){
-			this.colNames[col - 1] = rsmd.getColumnName(col);
-			this.colTypes[col - 1] = SQLTypes.convertToString(rsmd.getColumnType(col));
+			this.colNames[col - 1] = rsmd.getColumnLabel(col);
+			this.colTypes[col - 1] = SQLTypes.convertToString(rsmd.getColumnType(col)) + "(" + rsmd.getColumnDisplaySize(col) + ")";
 		}
 
 		String[] data;

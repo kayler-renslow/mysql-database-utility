@@ -41,6 +41,6 @@ public class ConnectionGUIAction implements EventHandler<ActionEvent> {
 
     private void disconnectButtonPress() {
         Task.runTask(this.dc.getDisconnectTask());
-		this.qc.clearTable();
+		this.qc.clearTables();
     }
 }

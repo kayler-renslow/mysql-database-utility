@@ -4,7 +4,6 @@ import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
-import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -51,7 +50,7 @@ public class DataSynchronizeWindow extends VBox implements IFXWindow, EventHandl
 
 	@Override
 	public void handle(ActionEvent event) {
-		Program.DATABASE_CONNECTION.prepareSynchronize(this.tftable.getText());
+//		Program.DATABASE_CONNECTION.prepareSynchronize(this.tftable.getText());
 		DBTask.runTask(qc.getDBSynchronizeTask());
 		WebsiteDatabaseTool.closeWindow(this);
 	}

@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -20,6 +21,7 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
     private static VBox root = null;
     private static Scene scene;
     public static Stage stage;
+	private static final String ICON_PATH = "/com/kaylerrenslow/mysqlDatabaseTool/resources/website_database_tool_icon.png";
 
     private static ArrayList<FXStageWrapper> subWindows = new ArrayList<>();
 
@@ -30,12 +32,14 @@ public class WebsiteDatabaseTool extends Application implements EventHandler<Win
     @Override
     public void start(Stage stage) throws Exception {
         WebsiteDatabaseTool.stage = stage;
-        root = FXMLLoader.load(getClass().getResource("/com/kaylerrenslow/mysqlDatabaseTool/main/mainWindow.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/com/kaylerrenslow/mysqlDatabaseTool/resources/mainWindow.fxml"));
         scene = new Scene(root, Program.WINDOW_WIDTH, Program.WINDOW_HEIGHT);
         WebsiteDatabaseTool.stage.setTitle(Lang.PROGRAM_WINDOW_TITLE);
         WebsiteDatabaseTool.stage.setScene(scene);
         WebsiteDatabaseTool.stage.show();
 		stage.setOnCloseRequest(this);
+
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(ICON_PATH)));
     }
 
 

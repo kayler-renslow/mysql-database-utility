@@ -21,7 +21,7 @@ public class InitController implements Initializable{
     /**/
 
     @FXML
-    TableView<String> tableQueryResults;
+    TabPane tabPane;
 
     /**/
 

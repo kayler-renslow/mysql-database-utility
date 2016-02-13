@@ -2,6 +2,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.window;
 
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
+import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import javafx.event.ActionEvent;
@@ -35,15 +36,16 @@ public class ViewEditsWindow extends VBox implements IFXWindow{
 	private VBox vbEdits = new VBox();
 	private ScrollPane scrollPane = new ScrollPane(vbEdits);
 
-	private boolean noEdits = false;
-
-	public ViewEditsWindow(QueryFXController qc) {
-		initialize(qc.tableEditIterator(), qc);
+	public ViewEditsWindow(DBTable table, QueryFXController qc) {
+		initialize(table, qc);
 	}
 
-	private void initialize(Iterator<DBTableEdit> iter, QueryFXController qc){
+	private void initialize(DBTable table, QueryFXController qc){
 		this.setPadding(PADDING);
 		this.scrollPane.setFitToWidth(true);
+
+		Iterator<DBTableEdit> iter = table.iterator(true);
+
 		Button btnRemoveLastestEdit = new Button("Remove Latest Edit");
 
 		this.getChildren().add(btnRemoveLastestEdit);
@@ -52,14 +54,12 @@ public class ViewEditsWindow extends VBox implements IFXWindow{
 		btnRemoveLastestEdit.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
-				qc.removeLatestTableUpdate();
+				table.undoLastEdit();
 				removeFirstChild();
 			}
 		});
 
 		if(!iter.hasNext()){ //no edits
-			noEdits = true;
-			HBox noedits = new HBox();
 			Label l = new Label(Lang.WINDOW_VIEW_EDITS_NO_EDITS);
 			this.vbEdits.getChildren().add(l);
 			btnRemoveLastestEdit.setDisable(true);

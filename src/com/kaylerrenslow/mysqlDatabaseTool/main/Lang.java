@@ -60,27 +60,29 @@ public class Lang {
     public static final String PROGRAM_WINDOW_TITLE = "Website Database Tool";
 
     /*Begin constants for menu bar strings*/
-
-    public static final String MENUB_DATA_TITLE = "Data";
-    public static final String MENUB_DATA_NEW_ENTRY = "New entry";
-    public static final String MENUB_DATA_SYNC_DATA = "Sync table data to database";
-	public static final String MENUB_DATA_LIST_TABLES = "List all tables";
-	public static final String MENUB_DATA_VIEW_EDITS = "View table edits";
-
-    /*End constants for menu bar strings*/
+    public static final String MENUB_TITLE_VIEW = "View";
+	public static final String MENUB_ITEM_ADD_NEW_TABLE = "Add New Table";
+	public static final java.lang.String MENUB_ITEM_NO_TABLES = "No Tables to Show";
+	/*End constants for menu bar strings*/
 
     /*Begin constants for context menu strings*/
 	public static final String CONTEXT_MENU_DBTV_EDIT = "Edit";
-
 	public static final String CONTEXT_MENU_DBTV_REMOVE_ROW = "Remove Row";
+	public static final String CONTEXT_MENU_DBTV_DUPLICATE = "Duplicate";
+	public static final String CONTEXT_MENU_DBTV_DATA_NEW_ENTRY = "New entry";
+	public static final String CONTEXT_MENU_DBTV_VIEW_EDITS = "View Edits";
+	public static final String CONTEXT_MENU_DBTV_REFRESH = "Refresh";
+	public static final String CONTEXT_MENU_DBTV_SYNC_DATA = "Synchronize to Database";
+	/*End constants for context menu strings*/
 
+	public static final String CONTEXT_MENU_TAB_PANE_CLOSE = "Close Tab";
 
-    /*End constants for context menu strings*/
 	public static final String DB_COL_EDITOR_MSG_NOT_SUPPORTED = "Editor '%s' incompatible with data type.";
+
 	public static final String DB_EDITOR_MENU_TITLE = "Data";
 	public static final String DB_EDITOR_MENU_DATA_SAVE = "Save";
-	public static final String CONTEXT_MENU_DBTV_DUPLICATE = "Duplicate";
 
+	public static final String TAB_PANE_TITLE_QUERY_RESULT = "Query Result";
 
 	public static final String WINDOW_ALL_TABLES = "All SQL tables";
 	public static final String WINDOW_DATA_SYNC = "Synchronize the table to the server";

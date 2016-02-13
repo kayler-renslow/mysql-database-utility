@@ -1,1 +1,11 @@
--show edit window will no say explicitly if there has not been edits made
+-added length of column type in data editor
+-column names are now what was specified in an AS clause or the default column name is AS wasnt defined
+-created resources folder
+	-created icon for program
+	-moved mainwindow.fxml to resources folder
+-moved query result table into tabbed pane. each table in database will get its own tab
+	-synchronization happens from right click menu in tabs
+	-view edits window will come from right click menu in tabs
+	-added context menu to close tabs
+-moved all features out of main menu bar
+-displaying all data from tables and putting into tabs can be done through the main menu

@@ -4,55 +4,73 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuItem;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.FXMenuUtil;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.menu.IFXMenuEventHandle;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.window.AllTablesWindow;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DataSynchronizeWindow;
-import com.kaylerrenslow.mysqlDatabaseTool.fx.window.ViewEditsWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+
+import java.util.ArrayList;
 
 /**
  * @author Kayler
- * Created on 12/7/15.
+ *         Created on 12/7/15.
  */
-public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuEventHandle, EventHandler<Event> {
+public class MainMenu_Data extends javafx.scene.control.Menu implements IFXMenuEventHandle, EventHandler<Event>{
 
-    private QueryFXController qc;
-    private FXMenuItem menuNewEntry = new FXMenuItem(Lang.MENUB_DATA_NEW_ENTRY);
-    private FXMenuItem menuSyncData = new FXMenuItem(Lang.MENUB_DATA_SYNC_DATA);
-    private FXMenuItem menuListTables = new FXMenuItem(Lang.MENUB_DATA_LIST_TABLES);
-	private FXMenuItem menuViewEdits = new FXMenuItem(Lang.MENUB_DATA_VIEW_EDITS);
+	final MenuItem noItems = new MenuItem(Lang.MENUB_ITEM_NO_TABLES);
+	QueryFXController qc;
+	Menu menuNewTable = new Menu(Lang.MENUB_ITEM_ADD_NEW_TABLE);
 
-    public MainMenu_Data(QueryFXController qc) {
-        super(Lang.MENUB_DATA_TITLE);
-        FXMenuUtil.addItems(this, this, menuNewEntry, menuSyncData, menuListTables, menuViewEdits);
-        this.qc = qc;
+	public MainMenu_Data(QueryFXController qc) {
+		super(Lang.MENUB_TITLE_VIEW);
+		this.getItems().addAll(menuNewTable);
+		this.qc = qc;
 		this.setOnShowing(this);
-    }
+		menuNewTable.setOnShowing(new ShowTablesEvent(this));
+		menuNewTable.getItems().add(noItems);
+	}
 
-    @Override
-    public void handle(int index, ActionEvent event) {
-        if(menuNewEntry.matchesIndex(index)){
-            qc.addEmptyRow();
-        }else if(menuSyncData.matchesIndex(index)){
-			WebsiteDatabaseTool.createNewWindow(new DataSynchronizeWindow(this.qc));
-        }else if(menuListTables.matchesIndex(index)){
-            WebsiteDatabaseTool.createNewWindow(new AllTablesWindow());
-        }else if(menuViewEdits.matchesIndex(index)){
-			WebsiteDatabaseTool.createNewWindow(new ViewEditsWindow(qc));
-		}
-    }
+	@Override
+	public void handle(int index, ActionEvent event) {
+		//this class's menu is showing
+	}
 
 	@Override
 	public void handle(Event event) {
-		for(MenuItem mi : this.getItems()){
+		for (MenuItem mi : this.getItems()){
 			mi.disableProperty().set(!Program.DATABASE_CONNECTION.isConnected());
 		}
-		this.menuSyncData.disableProperty().set(!qc.canAddEmptyRow());
-		this.menuNewEntry.disableProperty().set(!qc.canAddEmptyRow());
+	}
+
+	private class ShowTablesEvent implements EventHandler<Event>, IFXMenuEventHandle{
+
+		private final MainMenu_Data mainMenu;
+
+		public ShowTablesEvent(MainMenu_Data mainMenu) {
+			this.mainMenu = mainMenu;
+		}
+
+		@Override
+		public void handle(Event event) {
+			menuNewTable.getItems().clear();
+			ArrayList<String> tables = Program.DATABASE_CONNECTION.getAllTableNames();
+			if(tables.size() == 0){
+				menuNewTable.getItems().add(mainMenu.noItems);
+				return;
+			}
+			for (int i = 0; i < tables.size(); i++){
+				FXMenuItem item = new FXMenuItem(tables.get(i));
+				FXMenuUtil.addItems(this.mainMenu.menuNewTable, this, item);
+			}
+		}
+
+		@Override
+		public void handle(int index, ActionEvent event) {
+			MenuItem item = menuNewTable.getItems().get(index);
+			this.mainMenu.qc.addTab(item.getText());
+		}
 	}
 }
