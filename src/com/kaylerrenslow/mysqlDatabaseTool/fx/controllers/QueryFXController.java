@@ -184,6 +184,7 @@ public class QueryFXController{
 		DBTask.runTask(getDBSynchronizeTask());
 	}
 
+	/**Refreshes the given DBTable. Refreshing is clearing the current tableview's data and pulling the data from the database and injecting that into the tableview*/
 	public void refreshTable(DBTable dbTable) {
 		for(TabTableView ttt : tabs){
 			if(ttt.getTable() == dbTable){
