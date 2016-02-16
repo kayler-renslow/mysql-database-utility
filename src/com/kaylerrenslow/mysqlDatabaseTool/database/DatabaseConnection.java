@@ -23,6 +23,7 @@ import java.util.Iterator;
  */
 public class DatabaseConnection{
 	private File propFile;
+	private boolean propFileUpdated = false;
 	private MysqlConnection mysqlConn = new MysqlConnection(System.out);
 	private IConnectionUpdate conUpdate;
 	private IQueryExecuteEvent qee;
@@ -52,6 +53,7 @@ public class DatabaseConnection{
 	 */
 	public void setConnectionPropertiesFile(File propCon) {
 		this.propFile = propCon;
+		propFileUpdated = true;
 	}
 
 	/**
@@ -78,7 +80,7 @@ public class DatabaseConnection{
 			connectionUpdate(Lang.CONN_STATUS_NO_PROPERTIES_LONG, null, ConnectionStatus.NO_PROPERTIES);
 			return;
 		}
-		if (!mysqlConn.connectionPropertiesSet()){
+		if (this.propFileUpdated){
 			try{
 				mysqlConn.loadConnectionProperties(this.propFile);
 			}catch (IllegalArgumentException e){
@@ -98,7 +100,7 @@ public class DatabaseConnection{
 			connectionUpdate("An error occurred while trying to connect to the database.\n" + e.getMessage(), null, ConnectionStatus.CONNECTION_ERROR);
 			return;
 		}
-
+		this.propFileUpdated = false;
 		connectionUpdate(null, null, ConnectionStatus.CONNECTED);
 	}
 
@@ -127,6 +129,7 @@ public class DatabaseConnection{
 	public void runQuery() {
 		if (!this.isConnected()){
 			connectionUpdate(Lang.CONN_STATUS_NOT_CONNECTED_LONG, Lang.NOTIF_BODY_NOT_CONNECTED, ConnectionStatus.NOT_CONNECTED);
+			System.out.println("DatabaseConnection.runQuery");
 			return;
 		}
 		try{

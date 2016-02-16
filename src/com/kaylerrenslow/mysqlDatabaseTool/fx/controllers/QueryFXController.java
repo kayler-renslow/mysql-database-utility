@@ -41,6 +41,7 @@ public class QueryFXController{
 	private DBTask taskSync;
 
 	private TabTableView tableForQuery;
+
 	private boolean initialized;
 
 	public QueryFXController(DBConnectionFXController connControl, TextArea queryText, Button btnExecute, ChoiceBox cbDmlDdl, TabPane tabPane) {
@@ -165,12 +166,15 @@ public class QueryFXController{
 	}
 
 	/**
-	 * Clears all the tables and removes all table tabs
+	 * Deletes all table tabs except Query Result tab
 	 */
-	public void clearTables() {
-		this.tabs.clear();
-		this.tabPane.getTabs().clear();
-		initTabPane();
+	public void clearTabs() {
+		for(int i = this.tabs.size() - 1; i > 1; i--){
+			this.tabs.remove(i);
+		}
+		for(int i = this.tabPane.getTabs().size() - 1; i > 1; i--){
+			this.tabPane.getTabs().remove(i);
+		}
 	}
 
 	/**Prompts the user to confirm the sync*/

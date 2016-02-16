@@ -80,11 +80,10 @@ public class MysqlConnection{
 	 * Attempts to connect to the MySQL database.
 	 */
 	public void connect() throws ConnectionException {
-		String success = "Connection successfully opened.";
-		if (conn != null){
-			printToStream(success);
-			return;
+		if(this.isConnected()){
+			this.disconnect();
 		}
+		String success = "Connection successfully opened.";
 		try{
 			conn = createConnection();
 		}catch (Exception e){

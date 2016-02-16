@@ -1,0 +1,2 @@
+-fixed bug where reconnecting to a different server would just connect to the first connected server
+-fixed bug where pressing disconnect button would requery data when it shouldnt
