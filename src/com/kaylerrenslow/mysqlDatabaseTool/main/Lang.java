@@ -82,6 +82,8 @@ public class Lang {
 	public static final String DB_EDITOR_MENU_TITLE = "Data";
 	public static final String DB_EDITOR_MENU_DATA_SAVE = "Save";
 
+	public static final String DB_EDITOR_CONTROL_HTML_EDITOR_TOGGLE_BUTTON = "Show HTML";
+
 	public static final String TAB_PANE_TITLE_QUERY_RESULT = "Query Result";
 
 	public static final String WINDOW_ALL_TABLES = "All SQL tables";

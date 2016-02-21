@@ -9,8 +9,8 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.contextMenu.CM_TabPane;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.window.ConfirmSyncWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
@@ -151,7 +151,7 @@ public class QueryFXController{
 	 */
 	public void queryFailed(String errorMsg) {
 		this.tfTextQuery.setStyle(STYLE_ERROR);
-		this.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_QUERY_FAILED + "\n" + errorMsg);
+		this.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_QUERY_FAILED + "\n" + errorMsg, true);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class QueryFXController{
 
 	/**Prompts the user to confirm the sync*/
 	public void synchronizeToDatabase(DBTable table) {
-		WebsiteDatabaseTool.createNewWindow(new ConfirmSyncWindow(table, this));
+		MySQLDatabaseUtility.createNewWindow(new ConfirmSyncWindow(table, this));
 	}
 
 	/**Syncs the data without notifying the user.*/

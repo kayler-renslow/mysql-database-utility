@@ -1,6 +1,6 @@
 package com.kaylerrenslow.mysqlDatabaseTool.dbGui;
 
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -24,7 +24,7 @@ public abstract class Task extends javafx.concurrent.Task<Object>{
 				newValue.printStackTrace();
 //				self.cancel();
 				self.cancel(true);
-				WebsiteDatabaseTool.showErrorWindow("Error occurred", newValue.getMessage());
+				MySQLDatabaseUtility.showErrorWindow("Error occurred", newValue.getMessage());
 			}
 		});
 

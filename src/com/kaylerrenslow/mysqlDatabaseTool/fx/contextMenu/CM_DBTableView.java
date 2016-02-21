@@ -8,8 +8,8 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.window.DBDataEditorWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.window.ViewEditsWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
 
 /**
@@ -43,9 +43,9 @@ public class CM_DBTableView extends javafx.scene.control.ContextMenu implements 
 			if(this.dbTable.getSelectedRowData() == null){
 				return;
 			}
-            WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getSelectedRowIndex(), this.dbTable.getSelectedRowData()));
+            MySQLDatabaseUtility.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getSelectedRowIndex(), this.dbTable.getSelectedRowData()));
         }else if(duplicate.matchesIndex(index)){
-			WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getSelectedRowIndex(), this.dbTable.duplicateRow(this.dbTable.getSelectedRowIndex()), true));
+			MySQLDatabaseUtility.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getSelectedRowIndex(), this.dbTable.duplicateRow(this.dbTable.getSelectedRowIndex()), true));
 		}else if(removeRow.matchesIndex(index)){
 			this.dbTable.removeSelectedRow();
 		}else if(newEntry.matchesIndex(index)){
@@ -53,7 +53,7 @@ public class CM_DBTableView extends javafx.scene.control.ContextMenu implements 
 		}else if(sync.matchesIndex(index)){
 			this.dbTable.synchronizeToDatabase();
 		}else if(viewEdits.matchesIndex(index)){
-			WebsiteDatabaseTool.createNewWindow(new ViewEditsWindow(this.dbTable, this.qc));
+			MySQLDatabaseUtility.createNewWindow(new ViewEditsWindow(this.dbTable, this.qc));
 		}else if(refresh.matchesIndex(index)){
 			qc.refreshTable(this.dbTable);
 		}
@@ -66,12 +66,12 @@ public class CM_DBTableView extends javafx.scene.control.ContextMenu implements 
 	private void addEmptyRow() {
 		if (Program.DATABASE_CONNECTION.isConnected()){
 			if (this.dbTable.hasColumns()){
-				WebsiteDatabaseTool.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getRowSize(), this.dbTable.getNewRowData(), true));
+				MySQLDatabaseUtility.createNewWindow(new DBDataEditorWindow(this.dbTable, this.dbTable.getRowSize(), this.dbTable.getNewRowData(), true));
 			}else{
-				this.qc.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NO_COLUMNS);
+				this.qc.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NO_COLUMNS, true);
 			}
 		}else {
-			this.qc.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NOT_CONNECTED);
+			this.qc.connControl.getDatabaseFXController().setConsoleText(Lang.NOTIF_TITLE_NEW_ENTRY_ERROR + "\n" + Lang.NOTIF_BODY_NOT_CONNECTED, true);
 		}
 	}
 

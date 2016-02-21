@@ -3,6 +3,7 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.controllers;
 import com.kaylerrenslow.mysqlDatabaseTool.dbGui.DBTask;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent.ConnectionGUIAction;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent.LocatePropFileAction;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Util;
 import javafx.beans.value.ChangeListener;
@@ -115,9 +116,12 @@ public class DatabaseFXController{
 	/**
 	 * Sets the console text
 	 */
-	public void setConsoleText(String text) {
+	public void setConsoleText(String text, boolean error) {
 		String txt = Util.addLinebreaks(text == null ? "" : text, CONSOLE_MAX_LINE_LENGTH);
 		this.taConsole.setText(txt);
+		if(error){
+			MySQLDatabaseUtility.showErrorWindow("Something Went Wrong", text);
+		}
 	}
 
 }

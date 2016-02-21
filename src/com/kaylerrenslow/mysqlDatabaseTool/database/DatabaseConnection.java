@@ -6,7 +6,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.dbGui.IQueryExecuteEvent;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.IDBTableData;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import javafx.collections.ObservableList;
 
 import java.io.File;
@@ -187,7 +187,7 @@ public class DatabaseConnection{
 			}
 		}catch (Exception e){
 			System.err.println("Synchronize failed. " + e.getMessage());
-			WebsiteDatabaseTool.showErrorWindow("Synchronization failed.", e.getMessage());
+			MySQLDatabaseUtility.showErrorWindow("Synchronization failed.", e.getMessage());
 			return;
 		}
 

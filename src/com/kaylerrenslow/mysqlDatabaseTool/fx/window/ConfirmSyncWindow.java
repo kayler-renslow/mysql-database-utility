@@ -5,7 +5,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.QueryFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTable;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -79,6 +79,6 @@ public class ConfirmSyncWindow extends VBox implements IFXWindow, EventHandler<A
 	}
 
 	private void closeWindow() {
-		WebsiteDatabaseTool.closeWindow(this);
+		MySQLDatabaseUtility.closeWindow(this);
 	}
 }

@@ -2,8 +2,8 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.actionEvent;
 
 import com.kaylerrenslow.mysqlDatabaseTool.fx.controllers.DatabaseFXController;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import com.kaylerrenslow.mysqlDatabaseTool.main.Program;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
@@ -32,7 +32,7 @@ public class LocatePropFileAction implements EventHandler<ActionEvent>{
 
 	@Override
 	public void handle(ActionEvent event) {
-		File selFile = chooser.showOpenDialog(WebsiteDatabaseTool.stage);
+		File selFile = chooser.showOpenDialog(MySQLDatabaseUtility.stage);
 		if (selFile == null){
 			return;
 		}

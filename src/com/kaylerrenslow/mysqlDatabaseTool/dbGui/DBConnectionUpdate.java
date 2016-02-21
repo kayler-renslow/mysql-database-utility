@@ -56,7 +56,7 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
 				setProgress(1);
 				break;
 			case QUERY_FAIL:
-				this.dc.setConsoleText(msg);
+				this.dc.setConsoleText(msg, true);
 				setProgress(1);
 				break;
             default:
@@ -98,13 +98,13 @@ public class DBConnectionUpdate implements IConnectionUpdate, ChangeListener<Obj
     private void setProgress(double progress){
         this.progress = progress;
         this.style = STYLE_DEFAULT;
-		this.dc.setConsoleText(null);
+		this.dc.setConsoleText(null, false);
     }
 
     private void error(String msg){
 		this.setProgress(1);
         this.style = STYLE_ERROR;
-		this.dc.setConsoleText(msg);
+		this.dc.setConsoleText(msg, true);
     }
 
 

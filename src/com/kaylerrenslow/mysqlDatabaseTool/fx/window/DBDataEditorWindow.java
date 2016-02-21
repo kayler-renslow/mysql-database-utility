@@ -6,7 +6,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.IDBTableData;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.menu.DBEditorHeaderMenu;
-import com.kaylerrenslow.mysqlDatabaseTool.main.WebsiteDatabaseTool;
+import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MenuBar;
@@ -89,7 +89,7 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 		}
 		if(this.openAsNewDataEditor){
 			this.table.updateData(DBTableEdit.EditType.ADDITION, this.rowIndex, this.newData, this.oldData);
-			WebsiteDatabaseTool.closeWindow(this);
+			MySQLDatabaseUtility.closeWindow(this);
 		}else{
 			this.table.updateData(DBTableEdit.EditType.UPDATE, this.rowIndex, this.newData, this.oldData);
 		}

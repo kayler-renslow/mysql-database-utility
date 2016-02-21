@@ -148,14 +148,14 @@ public class MysqlConnection{
 			throw new IllegalStateException("Can not run a query when a connection isn't set.");
 		}
 		try{
-			Statement stmt = conn.createStatement();
+			PreparedStatement prepStatement = conn.prepareStatement(sql);
 			MysqlQueryResult mqr;
 
 			if (updating){
-				int num = stmt.executeUpdate(sql);
+				int num = prepStatement.executeUpdate();
 				mqr = new MysqlQueryResult(EXECUTE_UPDATE_COLUMN_NAME, new String[] {num + ""});
 			}else {
-				ResultSet rs = stmt.executeQuery(sql);
+				ResultSet rs = prepStatement.executeQuery();
 				mqr = new MysqlQueryResult(rs);
 			}
 			printToStream("Query was successful");

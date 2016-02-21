@@ -6,7 +6,8 @@ package com.kaylerrenslow.mysqlDatabaseTool.fx.control.db.editors;
  */
 public enum DBColumnEditors{
 
-	TEXT("Text", EC_TextArea.class), DATE_PICKER("Date Picker", EC_DatePicker.class);
+	TEXT("Text", EC_TextArea.class),
+	HTML_EDITOR("HTML Editor", EC_HTMLEditor.class);
 
 	public final String editorName;
 	public final Class clazz;
