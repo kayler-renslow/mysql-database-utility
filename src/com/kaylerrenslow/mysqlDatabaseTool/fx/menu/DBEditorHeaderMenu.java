@@ -30,7 +30,7 @@ public class DBEditorHeaderMenu extends Menu implements IFXMenuEventHandle{
 	@Override
 	public void handle(int index, ActionEvent event) {
 		if(save.matchesIndex(index)){
-			window.save();
+			window.saveAndExit();
 		}
 	}
 }

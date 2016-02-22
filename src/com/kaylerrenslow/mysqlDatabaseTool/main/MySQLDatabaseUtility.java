@@ -55,7 +55,12 @@ public class MySQLDatabaseUtility extends Application implements EventHandler<Wi
         stage.setTitle(window.getTitle());
         stage.show();
 		stage.getIcons().add(ICON);
-
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+			@Override
+			public void handle(WindowEvent event) {
+				window.closing();
+			}
+		});
     }
 
 	public static void showErrorWindow(String title, String errorMsg){
@@ -79,6 +84,7 @@ public class MySQLDatabaseUtility extends Application implements EventHandler<Wi
 	public static boolean closeWindow(IFXWindow window) {
 		for(FXStageWrapper s : subWindows){
 			if(s.getWindow() == window){
+				window.closing();
 				s.getStage().close();
 				return true;
 			}

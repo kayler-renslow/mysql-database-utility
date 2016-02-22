@@ -74,6 +74,11 @@ public class ConfirmSyncWindow extends VBox implements IFXWindow, EventHandler<A
 	}
 
 	@Override
+	public void closing() {
+
+	}
+
+	@Override
 	public void handle(ActionEvent event) { //cancel action
 		closeWindow();
 	}

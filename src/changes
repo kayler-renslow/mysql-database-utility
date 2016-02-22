@@ -1,6 +1,3 @@
--fixed bug where reconnecting to a different server would just connect to the first connected server
--fixed bug where pressing disconnect button would requery data when it shouldnt
--renamed main class
--now whenever an error gets put into the console, it will pop up a window as well
--removed date picker column editor
--added very basic HTML editor
+-sync updates will now only generate a update query of the updated data and not all the data in the row
+-fixed single quotes not being escaped in queries
+-data editor will now close when saved

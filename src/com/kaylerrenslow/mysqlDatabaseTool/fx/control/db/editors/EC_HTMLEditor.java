@@ -39,7 +39,7 @@ class HTMLEditor extends VBox implements EventHandler<ActionEvent>{
 	private static final Insets MARGIN_BOTTOM5 = new Insets(0,0,5,0);
 
 	private enum HTMLSpecialChar{
-		DQUOTE("\"", "&quot;"), SQUOTE("'", "&#39;"), LT("<", "&lt;"), GT(">","&gt;"), AMP("&", "&amp;");
+		LT("\\\\<", "&lt;"), GT("\\\\>","&gt;"), AMP("\\\\&", "&amp;");
 
 		String userChar, safeChar;
 		HTMLSpecialChar(String userChar, String safeChar){

@@ -87,11 +87,11 @@ public class MysqlConnection{
 		try{
 			conn = createConnection();
 		}catch (Exception e){
-			printToStream("An error occurred connecting to database.");
+			printToStream("An error occurred connecting to database.", true);
 			printStackTrace(e);
 			throw new ConnectionException(e.getMessage());
 		}
-		printToStream(success);
+		printToStream(success, false);
 	}
 
 	/**
@@ -107,18 +107,18 @@ public class MysqlConnection{
 	public void disconnect() {
 		String success = "Connection successfully closed.";
 		if (conn == null){
-			printToStream(success);
+			printToStream(success, false);
 			return;
 		}
 		try{
 			this.conn.close();
 		}catch (Exception e){
-			printToStream("An error occurred disconnecting from database:" + this.database);
+			printToStream("An error occurred disconnecting from database:" + this.database, true);
 			printStackTrace(e);
 			return;
 		}
 		this.conn = null;
-		printToStream(success);
+		printToStream(success, false);
 	}
 
 	/**
@@ -158,10 +158,10 @@ public class MysqlConnection{
 				ResultSet rs = prepStatement.executeQuery();
 				mqr = new MysqlQueryResult(rs);
 			}
-			printToStream("Query was successful");
+			printToStream("Query was successful", false);
 			return mqr;
 		}catch (SQLException e){
-			printToStream("Query '" + sql + "' failed.");
+			printToStream("Query '" + sql + "' failed.", true);
 			printStackTrace(e);
 			throw new QueryFailedException(e.getMessage());
 		}
@@ -178,19 +178,27 @@ public class MysqlConnection{
 	private Connection createConnection() throws SQLException {
 		Connection conn = null;
 		conn = DriverManager.getConnection("jdbc:mysql://" + this.server + "/" + this.database, connectionProps);
-		printToStream("Connected to database " + this.database + " on server " + this.server);
+		printToStream("Connected to database " + this.database + " on server " + this.server, false);
 		return conn;
 	}
 
-	private void printToStream(String msg) {
+	private void printToStream(String msg, boolean isError) {
 		if (stream != null){
-			stream.println(msg);
+			if(isError){
+				this.stream.println("\n---ERROR---");
+				this.stream.println(msg);
+				this.stream.println("---END ERROR---\n");
+			}else{
+				stream.println(msg);
+			}
 		}
 	}
 
 	private void printStackTrace(Exception e) {
 		if (this.stream != null){
+			this.stream.print("\n--EXCEPTION OCCURRED--");
 			e.printStackTrace(this.stream);
+			this.stream.println("--END EXCEPTION--\n");
 		}
 	}
 

@@ -18,4 +18,7 @@ public interface IFXWindow{
 
 	/**Get the title of the window*/
 	String getTitle();
+
+	/**Called when the window is going to close*/
+	void closing();
 }

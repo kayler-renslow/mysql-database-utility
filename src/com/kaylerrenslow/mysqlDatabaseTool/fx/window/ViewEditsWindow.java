@@ -42,4 +42,9 @@ public class ViewEditsWindow implements IFXWindow{
 	public String getTitle() {
 		return title;
 	}
+
+	@Override
+	public void closing() {
+
+	}
 }

@@ -45,4 +45,9 @@ public class AllTablesWindow extends ListView implements IFXWindow{
 	public String getTitle() {
 		return Lang.WINDOW_ALL_TABLES;
 	}
+
+	@Override
+	public void closing() {
+
+	}
 }

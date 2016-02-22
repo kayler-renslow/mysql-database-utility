@@ -6,6 +6,7 @@ import com.kaylerrenslow.mysqlDatabaseTool.fx.control.lib.window.IFXWindow;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.DBTableEdit;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.db.IDBTableData;
 import com.kaylerrenslow.mysqlDatabaseTool.fx.menu.DBEditorHeaderMenu;
+import com.kaylerrenslow.mysqlDatabaseTool.main.Lang;
 import com.kaylerrenslow.mysqlDatabaseTool.main.MySQLDatabaseUtility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.util.Iterator;
 
 /**
  * @author Kayler
@@ -83,16 +86,21 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 		}
 	}
 
-	public void save() {
+	public void saveAndExit() {
+		System.out.println("DBDataEditorWindow.saveAndExit");
 		for (int i = 0; i < this.panels.length; i++){
 			this.newData.set(i, this.panels[i].getEditorData());
 		}
+
 		if(this.openAsNewDataEditor){
 			this.table.updateData(DBTableEdit.EditType.ADDITION, this.rowIndex, this.newData, this.oldData);
-			MySQLDatabaseUtility.closeWindow(this);
 		}else{
+			if(dataEqual()){
+				return;
+			}
 			this.table.updateData(DBTableEdit.EditType.UPDATE, this.rowIndex, this.newData, this.oldData);
 		}
+		MySQLDatabaseUtility.closeWindow(this);
 	}
 
 
@@ -113,6 +121,25 @@ public class DBDataEditorWindow extends VBox implements IFXWindow{
 
 	@Override
 	public String getTitle() {
-		return "Edit Table Row Window";
+		return Lang.WINDOW_DATA_EDITOR;
+	}
+
+	@Override
+	public void closing() {
+
+	}
+
+	private boolean dataEqual() {
+		Iterator<String> iterNew = this.newData.iterator();
+		Iterator<String> iterOld = this.oldData.iterator();
+		if(this.newData.size() != this.oldData.size()){
+			throw new IllegalStateException("sizes aren't equal");
+		}
+		while(iterNew.hasNext()){
+			if(!iterNew.next().equals(iterOld.next())){
+				return false;
+			}
+		}
+		return true;
 	}
 }

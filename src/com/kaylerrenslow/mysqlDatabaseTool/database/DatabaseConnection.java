@@ -194,6 +194,8 @@ public class DatabaseConnection{
 		DBTableEdit edit;
 		Iterator<DBTableEdit> iter = this.dBTable.iterator(false);
 
+		System.out.println("----Sync Queries Started-----");
+
 		while (iter.hasNext()){
 			edit = iter.next();
 			String whereCond;
@@ -222,22 +224,22 @@ public class DatabaseConnection{
 				}else if (edit.type() == DBTableEdit.EditType.UPDATE){
 
 					query = "UPDATE " + tableName + " SET ";
-					query += getUpdateString(this.dBTable.getColumnNames(), edit.newRowData());
+					query += getUpdateString(this.dBTable.getColumnNames(), edit.newRowData(), edit.oldRowData());
 					query += whereCond;
 
 				}else {
 					throw new IllegalStateException("Edit type '" + edit.type() + "' not supported");
 				}
-				System.out.println(query);
 
 				this.mysqlConn.query(query, true);
+				System.out.println(query);
 
 			}catch (Exception e){
 				connectionUpdate(Lang.CONN_STATUS_QUERY_ERROR_LONG, e.getMessage(), ConnectionStatus.QUERY_FAIL);
 				return;
 			}
 		}
-		System.out.println("----Sync Queries complete-----");
+		System.out.println("----Sync Queries Complete-----");
 		this.dBTable.clearEdited();
 	}
 
@@ -253,7 +255,7 @@ public class DatabaseConnection{
 		Iterator iter = values.iterator();
 		int i = 0;
 		while (iter.hasNext()){
-			s += fields[i] + "='" + iter.next() + "'";
+			s += fields[i] + "='" + escapeString(iter.next().toString()) + "'";
 			if (iter.hasNext()){
 				s += " AND ";
 			}
@@ -263,14 +265,29 @@ public class DatabaseConnection{
 	}
 
 
-	private String getUpdateString(String[] fields, ObservableList<?> values) {
+	private String getUpdateString(String[] fields, ObservableList<?> newData, ObservableList<?> oldData) {
 		String s = "";
-		Iterator iter = values.iterator();
+		Iterator iterNew = newData.iterator();
+		Iterator iterOld = oldData.iterator();
+		if(newData.size() != oldData.size()){
+			throw new IllegalStateException("sizes aren't equal");
+		}
 		int i = 0;
-		while (iter.hasNext()){
-			s += fields[i] + "='" + iter.next() + "'";
-			if (iter.hasNext()){
+		String iterNextValue;
+		boolean placeComma = false;
+		while (iterNew.hasNext()){
+			iterNextValue = iterNew.next().toString();
+			if(iterNextValue.equals(iterOld.next())){ //no need to put this data in the update since it's the same
+				i++;
+				continue;
+			}
+			if(placeComma){
+				placeComma = false;
 				s += ", ";
+			}
+			s += fields[i] + "='" + escapeString(iterNextValue) + "'";
+			if (iterNew.hasNext()){
+				placeComma = true;
 			}
 			i++;
 		}
@@ -290,12 +307,16 @@ public class DatabaseConnection{
 		}
 		s += ") VALUES (";
 		while (iter.hasNext()){
-			s += "'"+iter.next()+"'";
+			s += "'"+escapeString(iter.next().toString())+"'";
 			if (iter.hasNext()){
 				s += ", ";
 			}
 			i++;
 		}
 		return s;
+	}
+
+	private String escapeString(String s){
+		return s.replaceAll("\'","\\\\'");
 	}
 }

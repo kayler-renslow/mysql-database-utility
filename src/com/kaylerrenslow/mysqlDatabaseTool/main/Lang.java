@@ -80,7 +80,7 @@ public class Lang {
 	public static final String DB_COL_EDITOR_MSG_NOT_SUPPORTED = "Editor '%s' incompatible with data type.";
 
 	public static final String DB_EDITOR_MENU_TITLE = "Data";
-	public static final String DB_EDITOR_MENU_DATA_SAVE = "Save";
+	public static final String DB_EDITOR_MENU_DATA_SAVE = "Save and Exit";
 
 	public static final String DB_EDITOR_CONTROL_HTML_EDITOR_TOGGLE_BUTTON = "Show HTML";
 
@@ -89,6 +89,7 @@ public class Lang {
 	public static final String WINDOW_ALL_TABLES = "All SQL tables";
 	public static final String WINDOW_VIEW_EDITS_PREFIX = "All Edits Made to ";
 	public static final String WINDOW_VIEW_EDITS_NO_EDITS = "No changes have been made.";
+	public static final String WINDOW_DATA_EDITOR = "Edit Table Row Window";
 
 	public static final String WINDOW_CONFIRM_SYNC_TITLE = "Confirm Synchronization Changes";
 	public static final String WINDOW_CONFIRM_SYNC_MESSAGE = "Are you sure you want to synchronize '%s' to the server's database?";
